@@ -9,7 +9,7 @@ const { PORT = 3001 } = process.env;
 const app = express();
 
 async function startServer() {
-  await mongoose.connect('mongodb://localhost:27017/mestodb', {
+  await mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
     useNewUrlParser: true,
   });
 
