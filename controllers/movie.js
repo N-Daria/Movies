@@ -1,9 +1,13 @@
 const Movie = require('../models/movie');
+const { UndefinedError } = require('../errors/UndefinedError');
+const { ValidationError } = require('../errors/ValidationError');
+const { OtherUserInfoError } = require('../errors/OtherUserInfoError');
+const { createdSuccesCode } = require('../errors/responseStatuses');
 
 module.exports.getMovies = (req, res, next) => {
   Movie.find({})
     .then((movies) => res.send({ movies }))
-    .catch(console.log)
+    .catch(next);
 };
 
 module.exports.createMovie = (req, res, next) => {
@@ -30,22 +34,38 @@ module.exports.createMovie = (req, res, next) => {
     nameRU,
     nameEN,
     thumbnail,
-  }).then((movie) => res.status(201).send({ movie }))
-    .catch(console.log);
+  }).then((movie) => res.status(createdSuccesCode).send({ movie }))
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        const newErr = new ValidationError('Переданы некорректные данные');
+        return next(newErr);
+      }
+
+      return next(err);
+    });
 };
 
 module.exports.deleteMovie = (req, res, next) => {
   Movie.findById(req.params.movieId)
-    .onFail(console.log)
+    .onFail(() => {
+      throw new UndefinedError('Запрашиваемая карточка не найдена');
+    })
     .then((movie) => {
       const owner = movie.owner.toString();
       if (owner !== req.user._id) {
-        throw new Error('Недостаточно прав для удаления чужой карточки');
+        throw new OtherUserInfoError('Недостаточно прав для удаления чужой карточки');
       }
       movie.delete().then(() => {
         res.send({ message: 'Фильм удален' });
       })
-        .catch(console.log);
+        .catch(next);
     })
-    .catch(console.log);
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        const newErr = new ValidationError('Передан некорректный id');
+        return next(newErr);
+      }
+
+      return next(err);
+    });
 };

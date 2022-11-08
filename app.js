@@ -2,6 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
+const { errorHandler } = require('./middlewares/errorHandler');
+const { undefinedPage } = require('./controllers/undefinedPage');
 
 const { authorization } = require('./middlewares/authorization');
 const { userRouters } = require('./routers/user');
@@ -29,7 +31,9 @@ app.use('/users', authorization, userRouters);
 app.use('/signup', signupRouter);
 app.use('/signin', signinRouter);
 app.use('/signout', signoutRouter);
+app.use('*', authorization, undefinedPage);
 
 app.use(errors());
+app.use(errorHandler);
 
 startServer();

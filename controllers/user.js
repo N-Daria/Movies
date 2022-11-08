@@ -1,10 +1,17 @@
 const User = require('../models/user');
+const { UndefinedError } = require('../errors/UndefinedError');
+const { ValidationError } = require('../errors/ValidationError');
 
 module.exports.getUserInfo = (req, res, next) => {
-  User.findById(res.user._id)
+  User.findById(req.user._id)
     .then((user) => res.send({ email: user.email, name: user.name }))
     .catch((err) => {
-      console.log(err);
+      if (err.name === 'CastError') {
+        const newErr = new ValidationError('Передан некорректный id');
+        return next(newErr);
+      }
+
+      return next(err);
     });
 };
 
@@ -22,13 +29,17 @@ module.exports.updateUserInfo = (req, res, next) => {
       runValidators: true,
     },
   ).onFail(() => {
-    console.log(err);
-    throw new Error('Запрашиваемый пользователь не найден');
+    throw new UndefinedError('Запрашиваемый пользователь не найден');
   })
     .then((user) => {
       res.send({ user });
     })
     .catch((err) => {
-      console.log(err);
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        const newErr = new ValidationError('Переданы некорректные данные');
+        return next(newErr);
+      }
+
+      return next(err);
     });
 };
