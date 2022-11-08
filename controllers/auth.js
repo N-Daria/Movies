@@ -61,7 +61,10 @@ module.exports.createUser = (req, res, next) => {
     });
 };
 
-module.exports.logout = (req, res) => {
-  res.clearCookie('token');
-  res.send('Токен удален');
+module.exports.logout = (req, res, next) => {
+  if (res.cookie.token) {
+    res.clearCookie('token');
+    res.send('Токен удален');
+  }
+  return next();
 };
