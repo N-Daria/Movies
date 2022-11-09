@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
 const { errorHandler } = require('./middlewares/errorHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const { allowedCors } = require('./middlewares/cors');
 
 const { authorization } = require('./middlewares/authorization');
 const { userRouters } = require('./routers/user');
@@ -26,6 +27,7 @@ async function startServer() {
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(allowedCors);
 app.use(requestLogger);
 
 app.use('/movies', authorization, moviesRouters);
