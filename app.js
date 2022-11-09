@@ -2,6 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
+const helmet = require('helmet');
+const { limiter } = require('./middlewares/rateLimiter');
 const { errorHandler } = require('./middlewares/errorHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { allowedCors } = require('./middlewares/cors');
@@ -20,6 +22,9 @@ async function startServer() {
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(helmet());
+app.use(limiter);
+
 app.use(allowedCors);
 app.use(requestLogger);
 
