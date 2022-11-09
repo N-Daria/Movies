@@ -52,12 +52,10 @@ const movieSchema = new mongoose.Schema({
     required: true,
     ref: user,
   },
-  // movieId: {
-  //   required: true,
-  //   type: String,
-  //   // type: mongoose.Schema.ObjectId,
-  //   // ref: MoviesExplorer,
-  // },
+  movieId: {
+    required: true,
+    type: Number,
+  },
   nameRU: {
     type: String,
     required: true,
