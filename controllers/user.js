@@ -1,18 +1,12 @@
 const User = require('../models/user');
 const { UndefinedError } = require('../errors/UndefinedError');
 const { ValidationError } = require('../errors/ValidationError');
+const { incorrectDataMessage, undefinedMessage } = require('../errors/responseMessages');
 
 module.exports.getUserInfo = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => res.send({ email: user.email, name: user.name }))
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        const newErr = new ValidationError('Передан некорректный id');
-        return next(newErr);
-      }
-
-      return next(err);
-    });
+    .catch(next);
 };
 
 module.exports.updateUserInfo = (req, res, next) => {
@@ -30,14 +24,14 @@ module.exports.updateUserInfo = (req, res, next) => {
     },
   )
     .orFail(() => {
-      throw new UndefinedError('Запрашиваемый пользователь не найден');
+      throw new UndefinedError(undefinedMessage);
     })
     .then((user) => {
       res.send({ user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        const newErr = new ValidationError('Переданы некорректные данные');
+        const newErr = new ValidationError(incorrectDataMessage);
         return next(newErr);
       }
 
