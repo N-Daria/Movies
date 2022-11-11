@@ -1,15 +1,16 @@
 const moviesRouters = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
+const validator = require('validator');
 const {
   deleteMovie,
   getMovies,
   createMovie,
 } = require('../controllers/movie');
-const { regExUrl, regExEn, regExRu } = require('../utils/utils');
+const { regExEn, regExRu } = require('../utils/utils');
 
-moviesRouters.delete('/movieID', celebrate({
+moviesRouters.delete('/:movieId', celebrate({
   params: Joi.object().keys({
-    movieID: Joi.string().hex().length(24),
+    movieId: Joi.number().required().integer().positive(),
   }),
 }), deleteMovie);
 
@@ -22,12 +23,27 @@ moviesRouters.post('/', celebrate({
     duration: Joi.number().required(),
     year: Joi.string().required(),
     description: Joi.string().required(),
-    image: Joi.string().required().pattern(regExUrl),
-    trailerLink: Joi.string().required().pattern(regExUrl),
-    thumbnail: Joi.string().required().pattern(regExUrl),
-    owner: Joi.string().hex().length(24),
+    image: Joi.string().required().custom((value, helpers) => {
+      if (validator.isURL(value)) {
+        return value;
+      }
+      return helpers.message('Передан некорректный url');
+    }),
+    trailerLink: Joi.string().required().custom((value, helpers) => {
+      if (validator.isURL(value)) {
+        return value;
+      }
+      return helpers.message('Передан некорректный url');
+    }),
+    thumbnail: Joi.string().required().custom((value, helpers) => {
+      if (validator.isURL(value)) {
+        return value;
+      }
+      return helpers.message('Передан некорректный url');
+    }),
     nameRU: Joi.string().required().pattern(regExRu),
     nameEN: Joi.string().required().pattern(regExEn),
+    movieId: Joi.number().required().integer().positive(),
   }),
 }), createMovie);
 

@@ -28,9 +28,10 @@ module.exports.updateUserInfo = (req, res, next) => {
       new: true,
       runValidators: true,
     },
-  ).onFail(() => {
-    throw new UndefinedError('Запрашиваемый пользователь не найден');
-  })
+  )
+    .orFail(() => {
+      throw new UndefinedError('Запрашиваемый пользователь не найден');
+    })
     .then((user) => {
       res.send({ user });
     })

@@ -11,6 +11,7 @@ module.exports.getMovies = (req, res, next) => {
 };
 
 module.exports.createMovie = (req, res, next) => {
+  const owner = req.user._id;
   const {
     country,
     director,
@@ -18,10 +19,11 @@ module.exports.createMovie = (req, res, next) => {
     year,
     description,
     image,
-    trailer,
+    trailerLink,
     nameRU,
     nameEN,
     thumbnail,
+    movieId,
   } = req.body;
   Movie.create({
     country,
@@ -30,10 +32,12 @@ module.exports.createMovie = (req, res, next) => {
     year,
     description,
     image,
-    trailer,
+    trailerLink,
     nameRU,
     nameEN,
     thumbnail,
+    owner,
+    movieId,
   }).then((movie) => res.status(createdSuccesCode).send({ movie }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -47,7 +51,7 @@ module.exports.createMovie = (req, res, next) => {
 
 module.exports.deleteMovie = (req, res, next) => {
   Movie.findById(req.params.movieId)
-    .onFail(() => {
+    .orFail(() => {
       throw new UndefinedError('Запрашиваемая карточка не найдена');
     })
     .then((movie) => {
