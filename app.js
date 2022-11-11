@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
@@ -9,11 +10,11 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { allowedCors } = require('./middlewares/cors');
 const { allRouters } = require('./routers/index');
 
-const { PORT = 3001 } = process.env;
+const { PORT = 3001, NODE_ENV, DB_ADRESS } = process.env;
 const app = express();
 
 async function startServer() {
-  await mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
+  await mongoose.connect(NODE_ENV === 'production' ? DB_ADRESS : 'mongodb://localhost:27017/moviesdb', {
     useNewUrlParser: true,
   });
 
@@ -23,10 +24,9 @@ async function startServer() {
 app.use(express.json());
 app.use(cookieParser());
 app.use(helmet());
-app.use(limiter);
-
-app.use(allowedCors);
 app.use(requestLogger);
+app.use(limiter);
+app.use(allowedCors);
 
 app.use(allRouters);
 

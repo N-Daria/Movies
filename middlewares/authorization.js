@@ -1,4 +1,3 @@
-require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const { AuthentificationError } = require('../errors/AuthentificationError');
 const { authentificationErrorMessage } = require('../errors/responseMessages');
