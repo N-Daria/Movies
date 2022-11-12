@@ -10,7 +10,7 @@ const { regExEn, regExRu } = require('../utils/utils');
 
 moviesRouters.delete('/:movieId', celebrate({
   params: Joi.object().keys({
-    movieId: Joi.number().required().integer().positive(),
+    movieId: Joi.string().required().length(24).hex(),
   }),
 }), deleteMovie);
 
