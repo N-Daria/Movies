@@ -1,19 +1,21 @@
 import './Header.css';
 import logo from '../../images/logo.svg';
+import Navigation from '../Navigation/Navigation';
 
 export default function Header(props) {
-
-  let loginBlock = props.login ? 'header__login-block' : 'header__login-block_none'
+  let headerHide = props.undefinedPage || props.url === '/signup' || props.url === '/signin' ? 'header_none' : 'header';
+  let loginBlock = props.loggedIn ? 'header_none' : '';
 
   return (
-    <header className="header">
+    <header className={headerHide}>
       <img src={logo} alt='логотип' className='header__logo' />
       <section className={loginBlock}>
-        <a className='header__login link' href='#'>Регистрация</a>
-        <a className='header__signin link' href='#'>
+        <a className='header__login link' href='/signup'>Регистрация</a>
+        <a className='link' href='/signin'>
           <button className='header__signin-button'>Войти</button>
         </a>
       </section >
+      <Navigation login={props.loggedIn} />
     </header >
   )
 }
