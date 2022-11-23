@@ -16,21 +16,21 @@
 .undefined__error {
   font-weight: 400;
   font-size: 80px;
-  line-height: 97px;
+  line-height: 1.21;
   margin: 0;
 }
 
 .undefined__text {
   font-weight: 400;
   font-size: 12px;
-  line-height: 15px;
+  line-height: 1.25;
   margin: 10px 0 0;
 }
 
 .undefined__link {
   font-weight: 400;
   font-size: 12px;
-  line-height: 15px;
+  line-height: 1.25;
   color: #3456F3;
   text-align: center;
   width: 100%;
@@ -44,17 +44,17 @@
 
   .undefined__error {
     font-size: 140px;
-    line-height: 169px;
+    line-height: 1.2;
   }
 
   .undefined__text {
     font-size: 16px;
-    line-height: 19px;
+    line-height: 1.2;
   }
 
   .undefined__link {
     font-size: 14px;
-    line-height: 17px;
+    line-height: 1.2;
   }
 }
 
