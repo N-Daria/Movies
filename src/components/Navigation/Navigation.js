@@ -20,7 +20,7 @@ export default function Navigation(props) {
 
   return (
     <>
-      <button className={`${navButton} ${navigationButtonClass}`} onClick={hideNav} />
+      <button className={`${navButton} ${navigationButtonClass} button`} onClick={hideNav} />
       <nav className={`${navigationClass} ${navHide}`}>
         <ul className="navigation_list list">
           <li className="navigation__link navigation__link_hide">
@@ -33,7 +33,7 @@ export default function Navigation(props) {
             <a href="/movies" className="navigation__link-text link">Сохранённые фильмы</a>
           </li>
         </ul>
-        <button className="navigation__account-button">
+        <button className="navigation__account-button button">
           <a href="/users/me" className="link navigation__account-text">Аккаунт</a>
         </button>
       </nav>

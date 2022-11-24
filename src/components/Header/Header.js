@@ -12,7 +12,7 @@ export default function Header(props) {
       <section className={loginBlock}>
         <a className='header__login link' href='/signup'>Регистрация</a>
         <a className='link' href='/signin'>
-          <button className='header__signin-button'>Войти</button>
+          <button className='header__signin-button button'>Войти</button>
         </a>
       </section >
       <Navigation login={props.loggedIn} />
