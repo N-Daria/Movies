@@ -22,12 +22,14 @@
   line-height: 1.6;
   font-weight: 500;
   margin: auto 30px auto 0;
+  color: inherit;
 }
 
 .header__signin-button {
   background-color: #3456F3;
   border-radius: 3px;
   color: white;
+  cursor: pointer;
 
   font-weight: 500;
   font-size: 10px;
