@@ -18,7 +18,13 @@
   display: flex;
   justify-content: space-between;
   overflow: hidden;
-  margin: 0 0 35px;
+  padding: 0px 0 16px;
+  margin: 0 0 15px;
+  border-bottom: 1px solid #E8E8E8;
+}
+
+.profile__data-block:last-child {
+  border: none;
 }
 
 .profile__data-type {
@@ -60,6 +66,7 @@
 @media (min-width: 768px) {
   .profile {
     margin: 237px auto;
+    padding: 0;
   }
 
   .profile__header {
@@ -67,7 +74,7 @@
   }
 
   .profile__edit {
-    margin: 212px 0 17px;
+    margin: 200px 0 17px;
   }
 }
 
@@ -81,6 +88,6 @@
   }
 
   .profile__edit {
-    margin: 222px 0 17px;
+    margin: 209px 0 17px;
   }
 }
