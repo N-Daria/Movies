@@ -43,9 +43,10 @@
     background-color: #FAFAFA;
     padding: 22px 13px 46px;
     width: 100%;
+    z-index: 2;
   }
 
-  .navigation_button {
+  .navigation__button {
     width: 40px;
     height: 40px;
     display: block;
@@ -73,7 +74,7 @@
     right: 8px;
   }
 
-  .navigation_list {
+  .navigation__list {
     width: 100%;
     text-align: center;
     margin-top: 100px;
@@ -129,7 +130,7 @@
     background-color: rgba(0, 0, 0, .3);
   }
 
-  .navigation_button {
+  .navigation__button {
     right: 31px;
   }
 
@@ -150,7 +151,7 @@
 @media (min-width: 1280px) {
 
   .navigation__link_hide,
-  .navigation_button {
+  .navigation__button {
     display: none;
   }
 
@@ -168,7 +169,7 @@
     margin-right: 0;
   }
 
-  .navigation_list {
+  .navigation__list {
     width: 100%;
     display: flex;
     justify-content: center;

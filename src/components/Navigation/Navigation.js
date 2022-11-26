@@ -3,7 +3,7 @@ import { useState } from "react";
 
 export default function Navigation(props) {
   let navigationClass = props.loggedIn ? "navigation" : "navigation_none";
-  let navigationButtonClass = props.loggedIn ? "navigation_button" : "navigation_none";
+  let navigationButtonClass = props.loggedIn ? "navigation__button" : "navigation_none";
 
   const [navButton, setnavButton] = useState("navigation__button_open");
   const [navHide, setnavHide] = useState("navigation_hide");
@@ -22,7 +22,7 @@ export default function Navigation(props) {
     <>
       <button className={`${navButton} ${navigationButtonClass} button`} onClick={hideNav} />
       <nav className={`${navigationClass} ${navHide}`}>
-        <ul className="navigation_list list">
+        <ul className="navigation__list list">
           <li className="navigation__link navigation__link_hide">
             <a href="/" className="navigation__link-text link">Главная</a>
           </li>
