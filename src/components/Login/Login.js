@@ -5,7 +5,7 @@ export default function Login() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
 
-  function onSubmit() {
+  function handleSubmit() {
 
   }
 
@@ -78,7 +78,7 @@ export default function Login() {
       redirectText='Регистрация'
       redirect='/signup'
       formName='signin'
-      onSubmit={onSubmit}
+      onSubmit={handleSubmit}
     >
       <span className="authorization__input-name">E-mail</span>
       <input id="email-input"
