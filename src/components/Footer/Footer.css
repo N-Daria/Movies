@@ -1,6 +1,7 @@
 .footer {
   width: 100%;
   padding: 0 10px 20px;
+  box-sizing: border-box;
 }
 
 .footer__annotation {
@@ -11,7 +12,7 @@
   color: #A0A0A0;
   border-bottom: 1px solid #E8E8E8;
   padding-bottom: 20px;
-  margin: 0 0 30px;
+  margin: 0 0 19px;
 }
 
 .footer__text {
@@ -31,6 +32,7 @@
   line-height: 15px;
   color: #A0A0A0;
   text-align: center;
+  margin: 29px 0 0px;
 }
 
 @media (min-width: 768px) {
@@ -38,7 +40,6 @@
     padding: 0 30px 20px;
     display: flex;
     flex-wrap: wrap;
-    box-sizing: border-box;
   }
 
   .footer__annotation {
@@ -56,11 +57,16 @@
   .footer__text {
     font-size: 13px;
     line-height: 16px;
-    margin-right: 20px;
+    margin: 0 20px 0 0;
+  }
+
+  .footer__text:last-child {
+    margin: 0;
   }
 
   .footer__year {
     color: black;
+    margin: 0;
   }
 }
 
