@@ -1,7 +1,12 @@
 import './Undefined.css'
+import { useNavigate } from "react-router-dom"
 
-export default function Undefined(props) {
-  let back = props.history;
+export default function Undefined() {
+  const navigate = useNavigate();
+
+  function redirect() {
+    navigate('/');
+  }
 
   return (
     <section className='undefined'>
@@ -9,7 +14,7 @@ export default function Undefined(props) {
         <p className='undefined__error'>404</p>
         <p className='undefined__text'>Страница не найдена</p>
       </div>
-      <a href={back} className='undefined__link link'>Назад</a>
+      <p onClick={redirect} className='undefined__link link'>Назад</p>
     </section>
   )
 }
