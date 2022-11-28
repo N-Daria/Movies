@@ -30,11 +30,11 @@ export default function Navigation(props) {
             <a href="/movies" className="navigation__link-text link">Фильмы</a>
           </li>
           <li className="navigation__link">
-            <a href="/movies" className="navigation__link-text link">Сохранённые фильмы</a>
+            <a href="/saved-movies" className="navigation__link-text link">Сохранённые фильмы</a>
           </li>
         </ul>
         <button className="navigation__account-button button">
-          <a href="/users/me" className="link navigation__account-text">Аккаунт</a>
+          <a href="/profile" className="link navigation__account-text">Аккаунт</a>
         </button>
       </nav>
     </>
