@@ -4,9 +4,9 @@ import MoviesCardList from '../MoviesCardList/MoviesCardList';
 export default function SavedMovies(props) {
 
   return (
-    <>
+    <main>
       <SearchForm />
       <MoviesCardList />
-    </>
+    </main>
   )
 };

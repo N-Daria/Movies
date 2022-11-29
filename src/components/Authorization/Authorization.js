@@ -11,7 +11,7 @@ export default function Authorization(props) {
   }
 
   return (
-    <section className={`authorization`}>
+    <main className={`authorization`}>
       <img src={logo} alt='логотип' className="authorization__logo" />
       <h2 className='authorization__header'>{props.header}</h2>
       <form name={props.formName} onSubmit={handleSubmit} id={props.formName}>
@@ -24,6 +24,6 @@ export default function Authorization(props) {
         </a>
       </form>
 
-    </section>
+    </main>
   );
 }; 

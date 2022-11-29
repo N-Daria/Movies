@@ -8,7 +8,7 @@ export default function MoviesCardList(props) {
   let buttonClass = props.url === '/movies' ? 'content__open button' : 'content_none';
 
   return (
-    <main className='content'>
+    <section className='content'>
       <ul className='content__list list'>
 
         {/* 320 _______________________________________________ */}
@@ -18,17 +18,11 @@ export default function MoviesCardList(props) {
           movieImg={image}
           movieDuration='1ч42м'
         />
-
-        {
-          props.card ?
-            <MoviesCard
-              movieName='33 слова о дизайне'
-              movieImg={image}
-              movieDuration='1ч42м'
-            />
-            : <Preloader />
-        }
-
+        <MoviesCard
+          movieName='33 слова о дизайне'
+          movieImg={image}
+          movieDuration='1ч42м'
+        />
         <MoviesCard
           movieName='33 слова о дизайне'
           movieImg={image}
@@ -116,6 +110,6 @@ export default function MoviesCardList(props) {
 
       <button type='button' className={buttonClass}>еще</button>
 
-    </main >
+    </section >
   )
 };

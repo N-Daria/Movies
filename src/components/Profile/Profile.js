@@ -3,7 +3,7 @@ import './Profile.css'
 export default function Profile(props) {
 
   return (
-    <section className='profile'>
+    <main className='profile'>
       <h2 className='profile__header'>Привет, Виталий!{props.name}</h2>
 
       <div>
@@ -19,6 +19,6 @@ export default function Profile(props) {
 
       <a className='profile__edit link' href='#'>Редактировать</a>
       <a className='link profile__logout' href='/'>Выйти из аккаунта</a>
-    </section>
+    </main>
   )
 };
