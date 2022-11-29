@@ -18,6 +18,53 @@
   line-height: 1.2;
 }
 
+.authorization__input-name {
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 1.2;
+  color: #A0A0A0;
+  margin: 0 0 10px;
+  display: block;
+}
+
+.authorization__input {
+  background-color: #F4F4F4;
+  border-radius: 8px;
+  max-width: 396px;
+  width: 100%;
+  padding: 15px;
+  border: none;
+  box-sizing: border-box;
+  margin: 0 0 20px;
+
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+.authorization__input:last-of-type {
+  margin: 0;
+}
+
+.authorization__input:focus {
+  outline: none;
+}
+
+.input-err-text {
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 1.2;
+  color: #EE3465;
+  display: inline-block;
+  margin: 10px 0 20px;
+}
+
+input[name="password"] {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
 .authorization__button {
   max-width: 260px;
   width: 100%;
@@ -58,9 +105,18 @@
   margin-left: 7px;
 }
 
+@media (min-width: 768px) and (max-width: 1279px) {
+  .authorization {
+    height: 100vh;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    margin: 0 auto;
+  }
+}
+
 @media (min-width: 768px) {
   .authorization {
-    margin: 232px auto;
     max-width: 396px;
   }
 
@@ -72,6 +128,7 @@
     font-size: 24px;
     text-align: left;
     margin: 40px 0 41px;
+    width: 100%;
   }
 
   .authorization__button {
@@ -91,51 +148,4 @@
   .authorization {
     margin: 69px auto;
   }
-}
-
-.authorization__input-name {
-  font-weight: 400;
-  font-size: 10px;
-  line-height: 1.2;
-  color: #A0A0A0;
-  margin: 0 0 10px;
-  display: block;
-}
-
-.authorization__input {
-  background-color: #F4F4F4;
-  border-radius: 8px;
-  max-width: 260px;
-  width: 100%;
-  padding: 15px;
-  border: none;
-  box-sizing: border-box;
-  margin: 0 0 20px;
-
-  font-weight: 400;
-  font-size: 13px;
-  line-height: 1.2;
-}
-
-.authorization__input:last-of-type {
-  margin: 0;
-}
-
-.authorization__input:focus {
-  outline: none;
-}
-
-.input-err-text {
-  font-weight: 400;
-  font-size: 10px;
-  line-height: 1.2;
-  color: #EE3465;
-  display: inline-block;
-  margin: 10px 0 20px;
-}
-
-input[name="password"] {
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
 }
