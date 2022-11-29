@@ -3,15 +3,15 @@ import { useState } from "react";
 
 export default function Navigation(props) {
   let navigationClass = props.loggedIn ? "navigation" : "navigation_none";
-  let navigationButtonClass = props.loggedIn ? "navigation__button" : "navigation_none";
+  let navigationButtonClass = props.loggedIn ? "navigation-button" : "navigation_none";
 
-  const [navButton, setnavButton] = useState("navigation__button_open");
+  const [navButton, setnavButton] = useState("navigation-button_open");
   const [navHide, setnavHide] = useState("navigation_hide");
 
   function hideNav() {
-    navButton === "navigation__button_open"
-      ? setnavButton("navigation__button_close")
-      : setnavButton("navigation__button_open");
+    navButton === "navigation-button_open"
+      ? setnavButton("navigation-button_close")
+      : setnavButton("navigation-button_open");
 
     navHide === "navigation_open"
       ? setnavHide("navigation_hide")

@@ -29,7 +29,7 @@
   margin-left: 15px;
 }
 
-@media (max-width: 1279px) {
+@media (max-width: 768px) {
   .navigation {
     position: fixed;
     top: 0;
@@ -43,10 +43,22 @@
     background-color: #FAFAFA;
     padding: 22px 13px 46px;
     width: 100%;
-    z-index: 2;
+    z-index: 11;
+    max-width: 520px;
   }
 
-  .navigation__button {
+  .navigation_open::before {
+    content: "";
+    position: fixed;
+    z-index: 10;
+    top: 0;
+    left: -200%;
+    right: 100%;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, .3);
+  }
+
+  .navigation-button {
     width: 40px;
     height: 40px;
     display: block;
@@ -56,18 +68,18 @@
     background-color: inherit;
     padding: 0;
     cursor: pointer;
-    z-index: 6;
+    z-index: 12;
     top: 17px;
     right: 14px;
   }
 
-  .navigation__button_open {
+  .navigation-button_open {
     background-image: url(../../images/navigation-open.svg);
     background-size: 40px;
     background-repeat: no-repeat;
   }
 
-  .navigation__button_close {
+  .navigation-button_close {
     background-image: url(../../images/navigation-close.svg);
     background-size: 34px;
     top: 8px;
@@ -113,45 +125,32 @@
   }
 }
 
-@media (min-width: 768px) and (max-width: 1279px) {
+@media (min-width: 520px) and (max-width: 768px) {
   .navigation {
-    max-width: 520px;
     padding: 36px 13px 91px;
   }
 
-  .navigation_open::before {
-    content: "";
-    position: fixed;
-    z-index: 4;
-    top: 0;
-    left: -200%;
-    right: 100%;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, .3);
-  }
-
-  .navigation__button {
+  .navigation-button {
     right: 31px;
   }
 
-  .navigation__button_close {
+  .navigation-button_close {
     top: 17px;
     right: 18px;
   }
 
-  .navigation__button_open {
+  .navigation-button_open {
     background-size: 45px;
-  }
-
-  .navigation__link {
-    margin-top: 27px;
   }
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 769px) {
+  .navigation__link {
+    margin-top: 27px;
+  }
 
   .navigation__link_hide,
-  .navigation__button {
+  .navigation-button {
     display: none;
   }
 
@@ -173,6 +172,11 @@
     width: 100%;
     display: flex;
     justify-content: center;
+  }
+
+  .navigation__list {
+    width: 100%;
+    text-align: center;
   }
 
   .navigation__link-text {
