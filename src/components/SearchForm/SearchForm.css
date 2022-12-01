@@ -1,5 +1,5 @@
 .search {
-  padding: 80px 0 39px;
+  padding: 47px 0 39px;
   margin: 0 14px;
   border-bottom: 1px solid #E8E8E8;
   box-sizing: border-box;
@@ -20,6 +20,22 @@
   line-height: 18px;
   color: #A0A0A0;
   box-sizing: border-box;
+}
+
+.search__error {
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 18px;
+  margin: 0 0 15px;
+  color: #EE3465;
+
+
+  opacity: 0;
+}
+
+.search__error_open {
+  transition: opacity .5s ease-in-out;
+  opacity: 1;
 }
 
 .search__button {
