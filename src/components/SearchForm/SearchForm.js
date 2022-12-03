@@ -12,7 +12,7 @@ export default function SearchForm(props) {
   }
 
   function getInputValue(event) {
-    if (event.target.name === 'search-input') {
+    if (event.target.name === 'movieName') {
       setmovieName(`${event.target.value}`);
     }
   }
@@ -31,7 +31,7 @@ export default function SearchForm(props) {
     event.preventDefault();
 
     if (isValid(event.target.movieName)) {
-
+      props.getMovies(movieName);
     }
   }
 
