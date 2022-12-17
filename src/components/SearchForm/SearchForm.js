@@ -3,35 +3,35 @@ import React from 'react';
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 
 export default function SearchForm(props) {
-  const [movieName, setmovieName] = React.useState("");
   const [errorText, setErrorText] = React.useState("");
+  const [isNameValid, setIsNameValid] = React.useState(false);
 
   function inputChange(event) {
     getInputValue(event);
-    isValid(event.target)
+    isValid(event.target);
   }
 
   function getInputValue(event) {
     if (event.target.name === 'movieName') {
-      setmovieName(`${event.target.value}`);
+      props.changeSearchWord(`${event.target.value}`);
     }
   }
 
   function isValid(formInput) {
     if (formInput.validity.valid) {
       setErrorText('');
-      return true
+      setIsNameValid(true);
     } else {
       setErrorText('search__error_open');
-      return false
+      setIsNameValid(false);
     }
   }
 
   function handleSubmit(event) {
     event.preventDefault();
 
-    if (isValid(event.target.movieName)) {
-      props.getMovies(movieName);
+    if (isNameValid) {
+      props.toggleContent();
     }
   }
 
