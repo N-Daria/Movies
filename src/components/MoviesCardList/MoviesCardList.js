@@ -1,19 +1,18 @@
 import './MoviesCardList.css';
 import MoviesCard from '../MoviesCard/MoviesCard';
+import React from 'react';
 
-export default function MoviesCardList(props) {
-  let buttonClass = props.url === '/movies' ? 'content__button_open button' : 'content_none';
+export default React.memo(function MoviesCardList(props) {
 
   return (
-    <section className='content'>
-      <ul className='content__list list'>
-        {props.movies !== undefined && props.movies.length > 1 && props.movies.map(function (movie) {
-          return <MoviesCard {...movie}
-            key={movie.id}
-          />
-        })}
-      </ul>
-      <button type='button' className={`${buttonClass} content__button`}>еще</button>
-    </section >
+    <ul className='content__list list'>
+      {props.renderedCards && props.renderedCards.map(function (movie) {
+        return <MoviesCard {...movie}
+          key={movie.id}
+        />
+      })
+      }
+    </ul>
   )
-};
+}
+);
