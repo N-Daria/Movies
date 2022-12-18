@@ -2,7 +2,7 @@ import './SearchForm.css';
 import React from 'react';
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 
-export default function SearchForm(props) {
+export default React.memo(function SearchForm(props) {
   const [errorText, setErrorText] = React.useState("");
   const [isNameValid, setIsNameValid] = React.useState(false);
 
@@ -53,4 +53,4 @@ export default function SearchForm(props) {
 
     </form>
   )
-};
+});
