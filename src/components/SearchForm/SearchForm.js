@@ -30,7 +30,7 @@ export default React.memo(function SearchForm(props) {
   function handleSubmit(event) {
     event.preventDefault();
 
-    if (isNameValid) {
+    if (isNameValid || props.isShortMovie) {
       props.toggleContent();
     }
   }
@@ -49,7 +49,9 @@ export default React.memo(function SearchForm(props) {
       />
       <button type='submit' className='search__button button' />
 
-      <FilterCheckbox />
+      <FilterCheckbox
+        toggleIsShortMovie={props.toggleIsShortMovie}
+      />
 
     </form>
   )

@@ -17,7 +17,6 @@ import Preloader from '../Preloader/Preloader';
 
 export default React.memo(function App() {
   const [loggedIn, setloggedIn] = React.useState(false);
-  const [beatFilmsList, setBeatFilmsList] = React.useState([]);
   const [filteredList, setFilteredList] = React.useState([]);
 
   const [preloaderBlock, setPreloaderBlock] = React.useState(false);
@@ -52,9 +51,15 @@ export default React.memo(function App() {
     setErrorText(text)
   }
 
+  function toggleIsShortMovie() {
+    isShortMovie ? setIsShortMovie(false) : setIsShortMovie(true);
+  }
+
   // const movieList = React.useMemo(() => setFilteredList(filteredList), [isShortMovie]);
 
   function filterMovies(movieName, allMovies) {
+    movieName = movieName.toLowerCase();
+    const movieDuration = isShortMovie ? 40 : 10000;
     setFilteredList([]);
 
     if (!allMovies) {
@@ -62,12 +67,13 @@ export default React.memo(function App() {
     }
 
     for (let i = 0; i < allMovies.length; i++) {
-      if ((allMovies[i].country).toLowerCase().includes(movieName) ||
-        (allMovies[i].description).toLowerCase().includes(movieName) ||
-        (allMovies[i].director).toLowerCase().includes(movieName) ||
-        (allMovies[i].nameEN).toLowerCase().includes(movieName) ||
-        (allMovies[i].nameRU).toLowerCase().includes(movieName) ||
-        (allMovies[i].year).toLowerCase().includes(movieName)) {
+      if (allMovies[i].duration <= movieDuration &&
+        ((allMovies[i].country).toLowerCase().includes(movieName) ||
+          (allMovies[i].description).toLowerCase().includes(movieName) ||
+          (allMovies[i].director).toLowerCase().includes(movieName) ||
+          (allMovies[i].nameEN).toLowerCase().includes(movieName) ||
+          (allMovies[i].nameRU).toLowerCase().includes(movieName) ||
+          (allMovies[i].year).toLowerCase().includes(movieName))) {
         setFilteredList(list => [...list, allMovies[i]]);
       }
     }
@@ -85,7 +91,6 @@ export default React.memo(function App() {
         localStorage.setItem('isShortMovie', isShortMovie);
         localStorage.setItem('searchWord', searchWord);
 
-        setBeatFilmsList(res);
         filterMovies(searchWord, JSON.parse(localStorage.movies));
       })
       .catch((err) => {
@@ -119,6 +124,9 @@ export default React.memo(function App() {
 
           changeSearchWord={changeSearchWord}
           moviesBlock={moviesBlock}
+
+          toggleIsShortMovie={toggleIsShortMovie}
+          isShortMovie={isShortMovie}
         />
 
         <Preloader

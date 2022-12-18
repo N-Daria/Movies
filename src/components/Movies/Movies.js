@@ -79,6 +79,8 @@ export default React.memo(function Movies(props) {
       <SearchForm
         toggleContent={toggleContent}
         changeSearchWord={props.changeSearchWord}
+        toggleIsShortMovie={props.toggleIsShortMovie}
+        isShortMovie={props.isShortMovie}
       />
 
       <main className={`${moviesClass} content`}>

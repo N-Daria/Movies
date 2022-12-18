@@ -9,6 +9,7 @@ export default function FilterCheckbox(props) {
         name="filter-input"
         className="filter__input"
         type="checkbox"
+        onClick={props.toggleIsShortMovie}
       />
       <label htmlFor="filter-input" className='filter__input-label' />
       <p className='filter__text'>Короткометражки</p>
