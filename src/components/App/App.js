@@ -18,22 +18,34 @@ import Preloader from '../Preloader/Preloader';
 export default React.memo(function App() {
   const [loggedIn, setloggedIn] = React.useState(false);
   const [filteredList, setFilteredList] = React.useState([]);
-
+  const [renderedCards, setRenderedCards] = React.useState([]);
   const [preloaderBlock, setPreloaderBlock] = React.useState(false);
   const [moviesBlock, setMoviesBlock] = React.useState(false);
   const [errorBlock, setErrorBlock] = React.useState(false);
   const [errorText, setErrorText] = React.useState('');
-
   const [isShortMovie, setIsShortMovie] = React.useState(false);
   const [searchWord, setSearchWord] = React.useState('');
+  const [cardsNumberOnClick, setCardsNumberOnClick] = React.useState(0);
+  const [cardsNumber, setCardsNumber] = React.useState(0);
+  const [currentCardsNumber, setCurrentCardsNumber] = React.useState(0);
+  const [isSearch, setIsSearch] = React.useState(false);
+  const [addCardButton, setAddCardButton] = React.useState(false);
 
-  // const toggleErrorBlock = React.useCallback((state) => {
-  //   setErrorBlock(state)
-  // }, [moviesBlock])
+  function toggleAddCardButton(state) {
+    setAddCardButton(state);
+  }
+
+  function toggleIsSearch() {
+    isSearch ? setIsSearch(false) : setIsSearch(true);
+  }
 
   function changeSearchWord(state) {
     setSearchWord(state);
   }
+
+  // const togglePreloaderBlock = React.useCallback((state) => {
+  //   setPreloaderBlock(state);
+  // }, [])
 
   function togglePreloaderBlock(state) {
     setPreloaderBlock(state);
@@ -55,7 +67,34 @@ export default React.memo(function App() {
     isShortMovie ? setIsShortMovie(false) : setIsShortMovie(true);
   }
 
-  // const movieList = React.useMemo(() => setFilteredList(filteredList), [isShortMovie]);
+  function checkSearchError() {
+    if (filteredList.length >= 1) {
+      toggleMoviesBlock(true);
+      toggleAddCardButton(true);
+      toggleErrorBlock(false);
+    } else {
+      toggleErrorBlock(true);
+      changeErrorText('Ничего не найдено');
+    }
+  }
+
+  function getScreenWidth() {
+    if (window.innerWidth <= 577) {
+      setCardsNumber(5);
+      setCardsNumberOnClick(2);
+    } else if (window.innerWidth <= 930) {
+      setCardsNumber(8);
+      setCardsNumberOnClick(2);
+    } else if (window.innerWidth <= 1280) {
+      setCardsNumber(9);
+      setCardsNumberOnClick(3);
+    } else {
+      setCardsNumber(12);
+      setCardsNumberOnClick(4);
+    }
+
+    setCurrentCardsNumber(cardsNumber);
+  }
 
   function filterMovies(movieName, allMovies) {
     movieName = movieName.toLowerCase();
@@ -77,10 +116,17 @@ export default React.memo(function App() {
         setFilteredList(list => [...list, allMovies[i]]);
       }
     }
+    checkSearchError();
+
+    if (currentCardsNumber >= filteredList.length) {
+      toggleAddCardButton(false);
+    }
   };
 
-  // const changeMovieList = React.useEffect(() => {
-  // }, [loggedIn])
+  function openMoreCards() {
+    setRenderedCards([...renderedCards.concat(filteredList.slice(currentCardsNumber, currentCardsNumber + cardsNumberOnClick))]);
+    setCurrentCardsNumber(currentCardsNumber + cardsNumberOnClick);
+  }
 
   function getBeatFilms() {
     localStorage.clear();
@@ -95,11 +141,21 @@ export default React.memo(function App() {
       })
       .catch((err) => {
         toggleMoviesBlock(false);
-        togglePreloaderBlock(false);
+        toggleAddCardButton(false);
         toggleErrorBlock(true);
         changeErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
       })
   };
+
+  React.useEffect(() => {
+    getScreenWidth();
+
+    if (filteredList.length > cardsNumber) {
+      setRenderedCards(filteredList.slice(0, cardsNumber));
+    } else {
+      setRenderedCards(filteredList.slice(0));
+    }
+  }, [filteredList]);
 
   return (
     <Routes>
@@ -112,21 +168,20 @@ export default React.memo(function App() {
 
         < Movies
           filteredList={filteredList}
-          getBeatFilms={getBeatFilms}
-
-          togglePreloaderBlock={togglePreloaderBlock}
-          filterMovies={filterMovies}
-          searchWord={searchWord}
-
-          toggleMoviesBlock={toggleMoviesBlock}
-          toggleErrorBlock={toggleErrorBlock}
-          changeErrorText={changeErrorText}
-
           changeSearchWord={changeSearchWord}
-          moviesBlock={moviesBlock}
-
           toggleIsShortMovie={toggleIsShortMovie}
           isShortMovie={isShortMovie}
+          toggleIsSearch={toggleIsSearch}
+          renderedCards={renderedCards}
+          openMoreCards={openMoreCards}
+          addCardButton={addCardButton}
+
+          moviesBlock={moviesBlock}
+
+          togglePreloaderBlock={togglePreloaderBlock}
+          getBeatFilms={getBeatFilms}
+          filterMovies={filterMovies}
+          searchWord={searchWord}
         />
 
         <Preloader
@@ -163,5 +218,4 @@ export default React.memo(function App() {
 
     </Routes>
   );
-}
-);
+});

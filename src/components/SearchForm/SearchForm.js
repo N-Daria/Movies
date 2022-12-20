@@ -31,7 +31,8 @@ export default React.memo(function SearchForm(props) {
     event.preventDefault();
 
     if (isNameValid || props.isShortMovie) {
-      props.toggleContent();
+      props.showContent();
+      // props.toggleIsSearch();
     }
   }
 
@@ -51,6 +52,7 @@ export default React.memo(function SearchForm(props) {
 
       <FilterCheckbox
         toggleIsShortMovie={props.toggleIsShortMovie}
+        isShortMovie={props.isShortMovie}
       />
 
     </form>
