@@ -92,8 +92,6 @@ export default React.memo(function App() {
       setCardsNumber(12);
       setCardsNumberOnClick(4);
     }
-
-    setCurrentCardsNumber(cardsNumber);
   }
 
   function filterMovies(movieName, allMovies) {
@@ -126,6 +124,10 @@ export default React.memo(function App() {
   function openMoreCards() {
     setRenderedCards([...renderedCards.concat(filteredList.slice(currentCardsNumber, currentCardsNumber + cardsNumberOnClick))]);
     setCurrentCardsNumber(currentCardsNumber + cardsNumberOnClick);
+
+    if (currentCardsNumber + cardsNumberOnClick >= filteredList.length) {
+      toggleAddCardButton(false);
+    }
   }
 
   function getBeatFilms() {
@@ -149,6 +151,7 @@ export default React.memo(function App() {
 
   React.useEffect(() => {
     getScreenWidth();
+    setCurrentCardsNumber(cardsNumber);
 
     if (filteredList.length > cardsNumber) {
       setRenderedCards(filteredList.slice(0, cardsNumber));
@@ -156,6 +159,13 @@ export default React.memo(function App() {
       setRenderedCards(filteredList.slice(0));
     }
   }, [filteredList]);
+
+  React.useEffect(() => {
+    window.addEventListener("resize", () => setTimeout(() => {
+      getScreenWidth();
+      setCurrentCardsNumber(currentCardsNumber);
+    }, 1000));
+  });
 
   return (
     <Routes>
