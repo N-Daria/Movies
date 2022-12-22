@@ -28,55 +28,35 @@ export default React.memo(function App() {
   const [cardsNumberOnClick, setCardsNumberOnClick] = React.useState(0);
   const [cardsNumber, setCardsNumber] = React.useState(0);
   const [currentCardsNumber, setCurrentCardsNumber] = React.useState(0);
-  const [isSearch, setIsSearch] = React.useState(false);
   const [addCardButton, setAddCardButton] = React.useState(false);
 
-  function toggleAddCardButton(state) {
+  const toggleAddCardButton = React.useCallback((state) => {
     setAddCardButton(state);
-  }
+  }, [])
 
-  function toggleIsSearch() {
-    isSearch ? setIsSearch(false) : setIsSearch(true);
-  }
-
-  function changeSearchWord(state) {
+  const changeSearchWord = React.useCallback((state) => {
     setSearchWord(state);
-  }
+  }, [])
 
-  // const togglePreloaderBlock = React.useCallback((state) => {
-  //   setPreloaderBlock(state);
-  // }, [])
-
-  function togglePreloaderBlock(state) {
+  const togglePreloaderBlock = React.useCallback((state) => {
     setPreloaderBlock(state);
-  }
+  }, [])
 
-  function toggleMoviesBlock(state) {
+  const toggleMoviesBlock = React.useCallback((state) => {
     setMoviesBlock(state);
-  }
+  }, [])
 
-  function toggleErrorBlock(state) {
+  const toggleErrorBlock = React.useCallback((state) => {
     setErrorBlock(state)
-  }
+  }, [])
 
-  function changeErrorText(text) {
+  const changeErrorText = React.useCallback((text) => {
     setErrorText(text)
-  }
+  }, [])
 
-  function toggleIsShortMovie() {
+  const toggleIsShortMovie = React.useCallback(() => {
     isShortMovie ? setIsShortMovie(false) : setIsShortMovie(true);
-  }
-
-  function checkSearchError() {
-    if (filteredList.length >= 1) {
-      toggleMoviesBlock(true);
-      toggleAddCardButton(true);
-      toggleErrorBlock(false);
-    } else {
-      toggleErrorBlock(true);
-      changeErrorText('Ничего не найдено');
-    }
-  }
+  }, [])
 
   function getScreenWidth() {
     if (window.innerWidth <= 577) {
@@ -97,7 +77,7 @@ export default React.memo(function App() {
   function filterMovies(movieName, allMovies) {
     movieName = movieName.toLowerCase();
     const movieDuration = isShortMovie ? 40 : 10000;
-    setFilteredList([]);
+    const list = [];
 
     if (!allMovies) {
       return null
@@ -111,12 +91,22 @@ export default React.memo(function App() {
           (allMovies[i].nameEN).toLowerCase().includes(movieName) ||
           (allMovies[i].nameRU).toLowerCase().includes(movieName) ||
           (allMovies[i].year).toLowerCase().includes(movieName))) {
-        setFilteredList(list => [...list, allMovies[i]]);
+        list.push(allMovies[i])
       }
     }
-    checkSearchError();
 
-    if (currentCardsNumber >= filteredList.length) {
+    setFilteredList(list)
+
+    if (list.length >= 1) {
+      toggleMoviesBlock(true);
+      toggleAddCardButton(true);
+      toggleErrorBlock(false);
+    } else {
+      toggleErrorBlock(true);
+      changeErrorText('Ничего не найдено');
+    }
+
+    if (currentCardsNumber >= list.length) {
       toggleAddCardButton(false);
     }
   };
@@ -146,6 +136,9 @@ export default React.memo(function App() {
         toggleAddCardButton(false);
         toggleErrorBlock(true);
         changeErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
+      })
+      .finally(() => {
+        togglePreloaderBlock(false);
       })
   };
 
@@ -181,7 +174,6 @@ export default React.memo(function App() {
           changeSearchWord={changeSearchWord}
           toggleIsShortMovie={toggleIsShortMovie}
           isShortMovie={isShortMovie}
-          toggleIsSearch={toggleIsSearch}
           renderedCards={renderedCards}
           openMoreCards={openMoreCards}
           addCardButton={addCardButton}

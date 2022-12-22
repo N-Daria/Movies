@@ -9,14 +9,7 @@ export default React.memo(function Movies(props) {
 
   function showContent() {
     props.togglePreloaderBlock(true);
-
-    if (localStorage.getItem('movies')) {
-      props.filterMovies(props.searchWord, JSON.parse(localStorage.movies));
-    } else {
-      props.getBeatFilms()
-    }
-
-    props.togglePreloaderBlock(false);
+    props.getBeatFilms();
   }
 
   return (
@@ -25,7 +18,6 @@ export default React.memo(function Movies(props) {
         changeSearchWord={props.changeSearchWord}
         toggleIsShortMovie={props.toggleIsShortMovie}
         isShortMovie={props.isShortMovie}
-        toggleIsSearch={props.toggleIsSearch}
         showContent={showContent}
       />
 

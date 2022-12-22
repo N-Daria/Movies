@@ -32,7 +32,6 @@ export default React.memo(function SearchForm(props) {
 
     if (isNameValid || props.isShortMovie) {
       props.showContent();
-      // props.toggleIsSearch();
     }
   }
 
