@@ -23,8 +23,8 @@ export default React.memo(function App() {
   const [moviesBlock, setMoviesBlock] = React.useState(false);
   const [errorBlock, setErrorBlock] = React.useState(false);
   const [errorText, setErrorText] = React.useState('');
-  const [isShortMovie, setIsShortMovie] = React.useState(false);
-  const [searchWord, setSearchWord] = React.useState('');
+  const [isShortMovie, setIsShortMovie] = React.useState(localStorage.getItem('isShortMovie') === 'true' || false);
+  const [searchWord, setSearchWord] = React.useState(localStorage.getItem('searchWord') || '');
   const [cardsNumberOnClick, setCardsNumberOnClick] = React.useState(0);
   const [cardsNumber, setCardsNumber] = React.useState(0);
   const [currentCardsNumber, setCurrentCardsNumber] = React.useState(0);
@@ -95,7 +95,7 @@ export default React.memo(function App() {
       }
     }
 
-    setFilteredList(list)
+    setFilteredList(list);
 
     if (list.length >= 1) {
       toggleMoviesBlock(true);
@@ -109,6 +109,8 @@ export default React.memo(function App() {
     if (currentCardsNumber >= list.length) {
       toggleAddCardButton(false);
     }
+
+    localStorage.setItem('movies', JSON.stringify(list));
   };
 
   function openMoreCards() {
@@ -125,11 +127,7 @@ export default React.memo(function App() {
 
     return getMovieList()
       .then((res) => {
-        localStorage.setItem('movies', JSON.stringify(res));
-        localStorage.setItem('isShortMovie', isShortMovie);
-        localStorage.setItem('searchWord', searchWord);
-
-        filterMovies(searchWord, JSON.parse(localStorage.movies));
+        filterMovies(searchWord, res);
       })
       .catch((err) => {
         toggleMoviesBlock(false);
@@ -159,6 +157,13 @@ export default React.memo(function App() {
       setCurrentCardsNumber(currentCardsNumber);
     }, 1000));
   });
+
+  React.useEffect(() => {
+    if (localStorage.getItem('movies')) {
+      setFilteredList(JSON.parse(localStorage.getItem('movies')));
+      toggleMoviesBlock(true)
+    }
+  }, []);
 
   return (
     <Routes>

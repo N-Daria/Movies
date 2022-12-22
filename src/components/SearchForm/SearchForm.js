@@ -46,6 +46,7 @@ export default React.memo(function SearchForm(props) {
         required
         type="text"
         onChange={inputChange}
+        value={props.searchWord}
       />
       <button type='submit' className='search__button button' />
 

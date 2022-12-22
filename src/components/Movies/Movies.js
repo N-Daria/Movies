@@ -9,7 +9,11 @@ export default React.memo(function Movies(props) {
 
   function showContent() {
     props.togglePreloaderBlock(true);
-    props.getBeatFilms();
+    props.getBeatFilms()
+      .then(() => {
+        localStorage.setItem('isShortMovie', props.isShortMovie);
+        localStorage.setItem('searchWord', props.searchWord);
+      })
   }
 
   return (
@@ -19,6 +23,7 @@ export default React.memo(function Movies(props) {
         toggleIsShortMovie={props.toggleIsShortMovie}
         isShortMovie={props.isShortMovie}
         showContent={showContent}
+        searchWord={props.searchWord}
       />
 
       <main className={`${moviesClass} content`}>
