@@ -30,6 +30,7 @@ export default React.memo(function Movies(props) {
 
         < MoviesCardList
           renderedCards={props.renderedCards}
+          handleCardLike={props.handleCardLike}
         />
 
         <button type='button' className={`${buttonClass} content__button`} onClick={props.openMoreCards}>еще</button>

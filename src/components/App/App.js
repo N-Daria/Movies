@@ -14,6 +14,7 @@ import Main from '../Main/Main';
 import { getMovieList } from '../../utils/MoviesApi';
 import Error from '../Error/Error';
 import Preloader from '../Preloader/Preloader';
+import { likeCard, deleteLikeCard } from '../../utils/MainApi';
 
 export default React.memo(function App() {
   const [loggedIn, setloggedIn] = React.useState(false);
@@ -140,6 +141,33 @@ export default React.memo(function App() {
       })
   };
 
+  function handleCardLike(isLike, card) {
+
+    function onSetCards(newCard) {
+      return setFilteredList((state) => {
+        return state.map((cardInCards) => {
+          return cardInCards.id === card.id ? newCard : cardInCards
+        });
+      });
+    }
+
+    isLike ?
+      deleteLikeCard(card)
+        .then((res) => {
+          console.log(res);
+          debugger
+          onSetCards(res)
+        })
+        .catch(console.log)
+      : likeCard(card)
+        .then((res) => {
+          console.log(res);
+          debugger
+          onSetCards(res)
+        })
+        .catch(console.log)
+  }
+
   React.useEffect(() => {
     getScreenWidth();
     setCurrentCardsNumber(cardsNumber);
@@ -182,6 +210,7 @@ export default React.memo(function App() {
           renderedCards={renderedCards}
           openMoreCards={openMoreCards}
           addCardButton={addCardButton}
+          handleCardLike={handleCardLike}
 
           moviesBlock={moviesBlock}
 
