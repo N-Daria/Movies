@@ -30,6 +30,7 @@ export default React.memo(function App() {
   const [cardsNumber, setCardsNumber] = React.useState(0);
   const [currentCardsNumber, setCurrentCardsNumber] = React.useState(0);
   const [addCardButton, setAddCardButton] = React.useState(false);
+  const [savedMovies, setSavedMovies] = React.useState([]);
 
   const toggleAddCardButton = React.useCallback((state) => {
     setAddCardButton(state);
@@ -92,11 +93,20 @@ export default React.memo(function App() {
           (allMovies[i].nameEN).toLowerCase().includes(movieName) ||
           (allMovies[i].nameRU).toLowerCase().includes(movieName) ||
           (allMovies[i].year).toLowerCase().includes(movieName))) {
-        list.push(allMovies[i])
+        setLikes(allMovies[i]);
+        list.push(allMovies[i]);
       }
     }
 
     setFilteredList(list);
+
+    function setLikes(item) {
+      savedMovies.forEach((el) => {
+        if (el.movieId === item.movieId) {
+          item.isLike = true;
+        }
+      })
+    }
 
     if (list.length >= 1) {
       toggleMoviesBlock(true);
@@ -141,29 +151,25 @@ export default React.memo(function App() {
       })
   };
 
-  function handleCardLike(isLike, card) {
+  function handleCardLike(card) {
 
     function onSetCards(newCard) {
       return setFilteredList((state) => {
         return state.map((cardInCards) => {
-          return cardInCards.id === card.id ? newCard : cardInCards
+          return cardInCards.id === card.id ? newCard : cardInCards;
         });
       });
     }
 
-    isLike ?
-      deleteLikeCard(card)
+    card.isLike === true ?
+      deleteLikeCard(card._id)
         .then((res) => {
-          console.log(res);
-          debugger
           onSetCards(res)
         })
         .catch(console.log)
       : likeCard(card)
         .then((res) => {
-          console.log(res);
-          debugger
-          onSetCards(res)
+          onSetCards(res);
         })
         .catch(console.log)
   }

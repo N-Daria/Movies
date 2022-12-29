@@ -3,10 +3,10 @@ import React from 'react';
 
 export default React.memo(function MoviesCard(props) {
   const buttonType = window.location.pathname === "/saved-movies" ? true : false;
-  const likeClass = props.likeClass ? 'card__like_active' : 'card__like_none';
+  const likeClass = props.isLike === true ? 'card__like_active' : 'card__like_none';
 
   function changeCardLike() {
-    props.handleCardLike(likeClass, props);
+    props.handleCardLike(props);
   }
 
   return (
