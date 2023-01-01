@@ -4,14 +4,11 @@ import logo from '../../images/logo.svg';
 export default function Authorization(props) {
   function handleSubmit(e) {
     e.preventDefault();
-
-    props.onSubmit({
-
-    });
+    props.onSubmit();
   }
 
   return (
-    <main className={`authorization`}>
+    <main className='authorization'>
       <img src={logo} alt='логотип' className="authorization__logo" />
       <h2 className='authorization__header'>{props.header}</h2>
       <form name={props.formName} onSubmit={handleSubmit} id={props.formName}>
