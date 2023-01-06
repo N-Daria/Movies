@@ -15,6 +15,7 @@ export default function Authorization(props) {
 
         {props.children}
 
+        <p className='authorization__error'>{props.errorText}</p>
         <button className="authorization__button authorization__button_disabled button" type="submit">{props.buttonText}</button>
         <a className='authorization__link link' href={props.redirect}>{props.linktext}
           <span className='authorization__link-span'>{props.redirectText}</span>

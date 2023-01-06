@@ -43,11 +43,21 @@
 }
 
 .authorization__input:last-of-type {
-  margin: 0;
+  margin: 0 0 182px;
 }
 
 .authorization__input:focus {
   outline: none;
+}
+
+.authorization__error {
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 1.2;
+  color: #EE3465;
+
+  margin: 10px 0 20px;
+  text-align: center;
 }
 
 .input-err-text {
@@ -73,7 +83,7 @@ input[name="password"] {
   background-color: #3456F3;
   border-radius: 3px;
   color: white;
-  margin: 182px auto 0;
+  margin: 0 auto 0;
 
   font-weight: 500;
   font-size: 12px;

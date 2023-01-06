@@ -1,5 +1,5 @@
 import './App.css';
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import React from 'react';
 
 import Header from '../Header/Header';
@@ -14,10 +14,10 @@ import Main from '../Main/Main';
 import { getMovieList } from '../../utils/MoviesApi';
 import Error from '../Error/Error';
 import Preloader from '../Preloader/Preloader';
-import { likeCard, deleteLikeCard } from '../../utils/MainApi';
+import { likeCard, deleteLikeCard, register } from '../../utils/MainApi';
 
 export default React.memo(function App() {
-  const [loggedIn, setloggedIn] = React.useState(false);
+  const [loggedIn, setLoggedIn] = React.useState(false);
   const [filteredList, setFilteredList] = React.useState([]);
   const [renderedCards, setRenderedCards] = React.useState([]);
   const [preloaderBlock, setPreloaderBlock] = React.useState(false);
@@ -31,6 +31,12 @@ export default React.memo(function App() {
   const [currentCardsNumber, setCurrentCardsNumber] = React.useState(0);
   const [addCardButton, setAddCardButton] = React.useState(false);
   const [savedMovies, setSavedMovies] = React.useState([]);
+
+  const navigate = useNavigate();
+
+  function redirect(path) {
+    navigate(path);
+  }
 
   const toggleAddCardButton = React.useCallback((state) => {
     setAddCardButton(state);
@@ -174,6 +180,22 @@ export default React.memo(function App() {
         .catch(console.log)
   }
 
+  function handleRegister(data) {
+    setErrorText('');
+
+    register(data)
+      .then((res) => {
+        if (res.data._id) {
+          localStorage.setItem('userData', JSON.stringify(res.data));
+          setLoggedIn(true);
+          redirect('/movies');
+        }
+      })
+      .catch((err) => {
+        setErrorText(err.message || 'Переданы некорректные данные');
+      })
+  }
+
   React.useEffect(() => {
     getScreenWidth();
     setCurrentCardsNumber(cardsNumber);
@@ -203,7 +225,12 @@ export default React.memo(function App() {
     <Routes>
 
       <Route path='/signin' element={<Login />} />
-      <Route path='/signup' element={<Register />} />
+      <Route path='/signup' element={
+        <Register
+          handleRegister={handleRegister}
+          errorText={errorText}
+        />
+      } />
 
       <Route path='/movies' element={<>
         <Header loggedIn={loggedIn} />

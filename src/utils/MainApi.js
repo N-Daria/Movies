@@ -4,7 +4,6 @@ const serverRequestConfig = {
   headers: {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
-    'credentials': "include",
   },
 };
 
@@ -16,6 +15,7 @@ export function likeCard(card) {
   return fetch(`${serverRequestConfig.url}/movies`, {
     method: 'POST',
     headers: serverRequestConfig.headers,
+    credentials: "include",
     body: JSON.stringify({
       country: card.country,
       director: card.director,
@@ -37,6 +37,20 @@ export function deleteLikeCard(id) {
   return fetch(`${serverRequestConfig.url}/movies/${id}`, {
     method: 'DELETE',
     headers: serverRequestConfig.headers
+  })
+    .then(checkResponse)
+};
+
+
+export function register(data) {
+  return fetch(`${serverRequestConfig.url}/signup`, {
+    method: 'POST',
+    headers: serverRequestConfig.headers,
+    body: JSON.stringify({
+      password: data.password,
+      email: data.email,
+      name: data.name
+    })
   })
     .then(checkResponse)
 };

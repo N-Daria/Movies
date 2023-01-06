@@ -2,12 +2,11 @@ import React from 'react';
 import Authorization from '../Authorization/Authorization';
 import { inputChange } from '../../utils/formValidation.js';
 
-export default function Register() {
+export default function Register(props) {
   const [values, setValues] = React.useState({});
 
   function handleSubmit() {
-    console.log(values);
-    debugger
+    props.handleRegister(values);
   }
 
   return (
@@ -20,6 +19,7 @@ export default function Register() {
       redirect='/signin'
       formName='signup'
       onSubmit={handleSubmit}
+      errorText={props.errorText}
     >
 
       <span className="authorization__input-name">Имя</span>
