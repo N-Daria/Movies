@@ -54,3 +54,15 @@ export function register(data) {
   })
     .then(checkResponse)
 };
+
+export function login(data) {
+  return fetch(`${serverRequestConfig.url}/signin`, {
+    method: 'POST',
+    headers: serverRequestConfig.headers,
+    body: JSON.stringify({
+      password: data.password,
+      email: data.email,
+    })
+  })
+    .then(checkResponse)
+};

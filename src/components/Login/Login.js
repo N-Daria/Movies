@@ -2,11 +2,11 @@ import React from 'react';
 import Authorization from '../Authorization/Authorization';
 import { inputChange } from '../../utils/formValidation.js';
 
-export default function Login() {
+export default function Login(props) {
   const [values, setValues] = React.useState({});
 
   function handleSubmit() {
-
+    props.handleLogin(values)
   }
 
   return (
@@ -19,6 +19,7 @@ export default function Login() {
       redirect='/signup'
       formName='signin'
       onSubmit={handleSubmit}
+      errorText={props.errorText}
     >
       <span className="authorization__input-name">E-mail</span>
       <input id="email-input"
@@ -26,7 +27,7 @@ export default function Login() {
           setValues({ ...values, [event.target.name]: event.target.value })
           inputChange(event)
         }}
-        type="text"
+        type="email"
         name="email"
         className="authorization__input"
         required

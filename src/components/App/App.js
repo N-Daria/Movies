@@ -14,7 +14,7 @@ import Main from '../Main/Main';
 import { getMovieList } from '../../utils/MoviesApi';
 import Error from '../Error/Error';
 import Preloader from '../Preloader/Preloader';
-import { likeCard, deleteLikeCard, register } from '../../utils/MainApi';
+import { likeCard, deleteLikeCard, register, login } from '../../utils/MainApi';
 
 export default React.memo(function App() {
   const [loggedIn, setLoggedIn] = React.useState(false);
@@ -31,6 +31,12 @@ export default React.memo(function App() {
   const [currentCardsNumber, setCurrentCardsNumber] = React.useState(0);
   const [addCardButton, setAddCardButton] = React.useState(false);
   const [savedMovies, setSavedMovies] = React.useState([]);
+
+  const [userData, setUserData] = React.useState({
+    id: '',
+    email: '',
+    name: ''
+  });
 
   const navigate = useNavigate();
 
@@ -192,7 +198,38 @@ export default React.memo(function App() {
         }
       })
       .catch((err) => {
-        setErrorText(err.message || 'Переданы некорректные данные');
+        if (err === 'Ошибка 409') {
+          setErrorText('Пользователь с таким email уже зарегестрирован')
+        } else if (err.message) {
+          setErrorText(err.message)
+        } else {
+          setErrorText('Переданы некорректные данные');
+        }
+      })
+  }
+
+  function handleLogin(data) {
+    setErrorText('');
+
+    login(data)
+      .then((res) => {
+        const user = JSON.parse(localStorage.getItem('userData'));
+
+        setUserData({
+          id: res._id,
+          email: user.email,
+          name: user.name
+        })
+
+        setLoggedIn(true);
+        redirect('/movies');
+      })
+      .catch((err) => {
+        if (err.message) {
+          setErrorText(err.message)
+        } else {
+          setErrorText('Переданы некорректные данные');
+        }
       })
   }
 
@@ -224,7 +261,12 @@ export default React.memo(function App() {
   return (
     <Routes>
 
-      <Route path='/signin' element={<Login />} />
+      <Route path='/signin' element={
+        <Login
+          handleLogin={handleLogin}
+          errorText={errorText}
+        />
+      } />
       <Route path='/signup' element={
         <Register
           handleRegister={handleRegister}
