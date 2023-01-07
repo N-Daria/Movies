@@ -32,10 +32,12 @@ export default React.memo(function App() {
   const [addCardButton, setAddCardButton] = React.useState(false);
   const [savedMovies, setSavedMovies] = React.useState([]);
 
+  const userAuthData = JSON.parse(localStorage.getItem('userData'))
+
   const [userData, setUserData] = React.useState({
-    id: '',
-    email: '',
-    name: ''
+    id: userAuthData._id || '',
+    email: userAuthData.email || '',
+    name: userAuthData.name || ''
   });
 
   const navigate = useNavigate();
@@ -213,12 +215,10 @@ export default React.memo(function App() {
 
     login(data)
       .then((res) => {
-        const user = JSON.parse(localStorage.getItem('userData'));
-
         setUserData({
           id: res._id,
-          email: user.email,
-          name: user.name
+          email: userData.email,
+          name: userData.name
         })
 
         setLoggedIn(true);
@@ -255,6 +255,12 @@ export default React.memo(function App() {
     if (localStorage.getItem('movies')) {
       setFilteredList(JSON.parse(localStorage.getItem('movies')));
       toggleMoviesBlock(true)
+    }
+  }, []);
+
+  React.useEffect(() => {
+    if (localStorage.getItem('userData')) {
+      setLoggedIn(true)
     }
   }, []);
 
