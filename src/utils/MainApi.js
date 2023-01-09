@@ -8,7 +8,12 @@ const serverRequestConfig = {
 };
 
 const checkResponse = (response) => {
-  return response.ok ? response.json() : Promise.reject(`Ошибка ${response.status}`);
+  return response.ok ?
+    response.json()
+    : response.json()
+      .then((res) => {
+        return Promise.reject(res.message || res.validation.body.message);
+      })
 }
 
 export function likeCard(card) {
@@ -36,6 +41,7 @@ export function likeCard(card) {
 export function deleteLikeCard(id) {
   return fetch(`${serverRequestConfig.url}/movies/${id}`, {
     method: 'DELETE',
+    credentials: "include",
     headers: serverRequestConfig.headers
   })
     .then(checkResponse)
@@ -46,6 +52,7 @@ export function register(data) {
   return fetch(`${serverRequestConfig.url}/signup`, {
     method: 'POST',
     headers: serverRequestConfig.headers,
+    credentials: "include",
     body: JSON.stringify({
       password: data.password,
       email: data.email,
@@ -59,8 +66,22 @@ export function login(data) {
   return fetch(`${serverRequestConfig.url}/signin`, {
     method: 'POST',
     headers: serverRequestConfig.headers,
+    credentials: "include",
     body: JSON.stringify({
       password: data.password,
+      email: data.email,
+    })
+  })
+    .then(checkResponse)
+};
+
+export function updateUserInfo(data) {
+  return fetch(`${serverRequestConfig.url}/users/me`, {
+    method: 'PATCH',
+    headers: serverRequestConfig.headers,
+    credentials: "include",
+    body: JSON.stringify({
+      name: data.name,
       email: data.email,
     })
   })

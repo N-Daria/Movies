@@ -229,14 +229,15 @@ export default React.memo(function App() {
 
     updateUserInfo(data)
       .then((res) => {
-
-        localStorage.setItem('userData', JSON.stringify(res.data));
+        localStorage.setItem('userData', JSON.stringify({
+          name: res.user.name,
+          email: res.user.email,
+        }));
         setUserData({
-          email: userData.email,
-          name: userData.name
+          name: res.user.name,
+          email: res.user.email,
         })
-
-        debugger
+        setErrorText("Данные успешно изменены!");
       })
       .catch((err) => {
         setErrorText(err);
