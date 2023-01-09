@@ -3,11 +3,12 @@ import './Profile.css';
 import { inputChange } from '../../utils/formValidation.js';
 
 export default function Profile(props) {
-  const [values, setValues] = React.useState({});
+  const [name, setName] = React.useState(props.userData.name);
+  const [email, setEmail] = React.useState(props.userData.email);
 
-  function handleSubmit() {
-    debugger
-    // props.handleSubmit();
+  function handleSubmit(e) {
+    e.preventDefault();
+    props.handleUpdateUserInfo({ name, email });
   }
 
   return (
@@ -20,7 +21,7 @@ export default function Profile(props) {
           <p className='profile__data-type'>Имя</p>
           <input id="name-input"
             onChange={(event) => {
-              setValues({ ...values, [event.target.name]: event.target.value })
+              setName(event.target.value)
               inputChange(event)
             }}
             type="text"
@@ -30,7 +31,7 @@ export default function Profile(props) {
             minLength="2"
             maxLength="30"
             pattern="[a-zA-Zа-яА-ЯЁё\-\s]+"
-            placeholder={props.userData.name}
+            value={name}
           />
         </div>
 
@@ -40,14 +41,14 @@ export default function Profile(props) {
           <p className='profile__data-type'>E&#8209;mail</p>
           <input id="email-input"
             onChange={(event) => {
-              setValues({ ...values, [event.target.name]: event.target.value })
+              setEmail(event.target.value)
               inputChange(event)
             }}
             type="email"
             name="email"
             className="profile__user-data"
             required
-            placeholder={props.userData.email}
+            value={email}
           />
         </div>
 
@@ -56,9 +57,9 @@ export default function Profile(props) {
       </div>
 
       <p className='authorization__error'>{props.errorText}</p>
-      <button className='authorization__button  button authorization__button_disabled' type="submit">Редактировать</button>
+      <button className='authorization__button  button authorization__button_disabled ' type="submit">Редактировать</button>
 
-      <a className='link profile__logout' href='/'>Выйти из аккаунта</a>
+      <button className='profile__logout button' type='button' onClick={props.handleLogout}>Выйти из аккаунта</button>
     </form>
   )
 };

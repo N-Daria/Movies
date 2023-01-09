@@ -1,6 +1,6 @@
 .profile {
   width: 100%;
-  margin: 70px auto;
+  margin: 70px auto 40px;
   padding: 0 30px;
   box-sizing: border-box;
   max-width: 410px;
@@ -23,7 +23,7 @@
 
 .profile__edit-block {
   width: 100%;
-  margin: 0 0 379px;
+  margin: 0 0 285px;
 }
 
 .profile__data-block {
@@ -67,6 +67,7 @@
   color: #EE3465;
   width: 100%;
   margin: 22px 0 0;
+  background-color: inherit;
 }
 
 @media (min-width: 768px) {
@@ -80,7 +81,7 @@
   }
 
   .profile__edit-block {
-    margin: 0 0 200px;
+    margin: 0 0 117px;
   }
 }
 
@@ -94,6 +95,6 @@
   }
 
   .profile__edit-block {
-    margin: 0 0 209px;
+    margin: 0 0 124px;
   }
 }
