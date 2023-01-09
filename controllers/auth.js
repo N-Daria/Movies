@@ -22,7 +22,7 @@ module.exports.login = (req, res, next) => {
         sameSite: true,
         maxAge: 3600000 * 24 * 7,
       });
-      res.send({ _id: user._id });
+      res.send({ _id: user._id, name: user.name, email: user.email });
     })
     .catch(next);
 };
@@ -62,9 +62,9 @@ module.exports.createUser = (req, res, next) => {
 };
 
 module.exports.logout = (req, res, next) => {
-  if (res.cookie.token) {
-    res.clearCookie('token');
-    res.send('Токен удален');
+  if (req.cookies.token) {
+    return res.clearCookie('token').send({ message: 'Токен удален' });
   }
+
   return next();
 };
