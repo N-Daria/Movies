@@ -14,7 +14,7 @@ const checkResponse = (response) => {
       .then((res) => {
         return Promise.reject(res.message || res.validation.body.message);
       })
-}
+};
 
 export function likeCard(card) {
   return fetch(`${serverRequestConfig.url}/movies`, {
@@ -78,6 +78,19 @@ export function login(data) {
 export function updateUserInfo(data) {
   return fetch(`${serverRequestConfig.url}/users/me`, {
     method: 'PATCH',
+    headers: serverRequestConfig.headers,
+    credentials: "include",
+    body: JSON.stringify({
+      name: data.name,
+      email: data.email,
+    })
+  })
+    .then(checkResponse)
+};
+
+export function logout(data) {
+  return fetch(`${serverRequestConfig.url}/signout`, {
+    method: 'POST',
     headers: serverRequestConfig.headers,
     credentials: "include",
     body: JSON.stringify({

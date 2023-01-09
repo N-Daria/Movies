@@ -14,7 +14,7 @@ import Main from '../Main/Main';
 import { getMovieList } from '../../utils/MoviesApi';
 import Error from '../Error/Error';
 import Preloader from '../Preloader/Preloader';
-import { likeCard, deleteLikeCard, register, login, updateUserInfo } from '../../utils/MainApi';
+import { likeCard, deleteLikeCard, register, login, updateUserInfo, logout } from '../../utils/MainApi';
 
 export default React.memo(function App() {
   const [loggedIn, setLoggedIn] = React.useState(false);
@@ -191,17 +191,7 @@ export default React.memo(function App() {
 
     register(data)
       .then((res) => {
-        debugger
         if (res.data._id) {
-          localStorage.setItem('userData', JSON.stringify({
-            name: res.data.name,
-            email: res.data.email,
-          }));
-          setUserData({
-            email: res.data.email,
-            name: res.data.name,
-          })
-
           handleLogin(data);
         }
       })
@@ -216,6 +206,14 @@ export default React.memo(function App() {
     login(data)
       .then((res) => {
         localStorage.setItem('userId', JSON.stringify(res._id));
+        localStorage.setItem('userData', JSON.stringify({
+          name: res.name,
+          email: res.email,
+        }));
+        setUserData({
+          name: res.name,
+          email: res.email,
+        })
         setLoggedIn(true);
         redirect('/movies');
       })
@@ -238,6 +236,19 @@ export default React.memo(function App() {
           email: res.user.email,
         })
         setErrorText("Данные успешно изменены!");
+      })
+      .catch((err) => {
+        setErrorText(err);
+      })
+  }
+
+  function handleLogout() {
+
+    logout(userData)
+      .then((res) => {
+        localStorage.clear();
+        setLoggedIn(false);
+        redirect('/');
       })
       .catch((err) => {
         setErrorText(err);
@@ -336,6 +347,7 @@ export default React.memo(function App() {
           userData={userData}
           errorText={errorText}
           handleUpdateUserInfo={handleUpdateUserInfo}
+          handleLogout={handleLogout}
         />
       </>} />
 
