@@ -14,7 +14,7 @@ import Main from '../Main/Main';
 import { getMovieList } from '../../utils/MoviesApi';
 import Error from '../Error/Error';
 import Preloader from '../Preloader/Preloader';
-import { likeCard, deleteLikeCard, register, login } from '../../utils/MainApi';
+import { likeCard, deleteLikeCard, register, login, updateUserInfo } from '../../utils/MainApi';
 
 export default React.memo(function App() {
   const [loggedIn, setLoggedIn] = React.useState(false);
@@ -32,10 +32,9 @@ export default React.memo(function App() {
   const [addCardButton, setAddCardButton] = React.useState(false);
   const [savedMovies, setSavedMovies] = React.useState([]);
 
-  const userAuthData = JSON.parse(localStorage.getItem('userData'))
+  const userAuthData = JSON.parse(localStorage.getItem('userData')) || '';
 
   const [userData, setUserData] = React.useState({
-    id: userAuthData._id || '',
     email: userAuthData.email || '',
     name: userAuthData.name || ''
   });
@@ -148,7 +147,6 @@ export default React.memo(function App() {
   }
 
   function getBeatFilms() {
-    localStorage.clear();
 
     return getMovieList()
       .then((res) => {
@@ -193,20 +191,22 @@ export default React.memo(function App() {
 
     register(data)
       .then((res) => {
+        debugger
         if (res.data._id) {
-          localStorage.setItem('userData', JSON.stringify(res.data));
-          setLoggedIn(true);
-          redirect('/movies');
+          localStorage.setItem('userData', JSON.stringify({
+            name: res.data.name,
+            email: res.data.email,
+          }));
+          setUserData({
+            email: res.data.email,
+            name: res.data.name,
+          })
+
+          handleLogin(data);
         }
       })
       .catch((err) => {
-        if (err === 'Ошибка 409') {
-          setErrorText('Пользователь с таким email уже зарегестрирован')
-        } else if (err.message) {
-          setErrorText(err.message)
-        } else {
-          setErrorText('Переданы некорректные данные');
-        }
+        setErrorText(err);
       })
   }
 
@@ -215,21 +215,31 @@ export default React.memo(function App() {
 
     login(data)
       .then((res) => {
-        setUserData({
-          id: res._id,
-          email: userData.email,
-          name: userData.name
-        })
-
+        localStorage.setItem('userId', JSON.stringify(res._id));
         setLoggedIn(true);
         redirect('/movies');
       })
       .catch((err) => {
-        if (err.message) {
-          setErrorText(err.message)
-        } else {
-          setErrorText('Переданы некорректные данные');
-        }
+        setErrorText(err);
+      })
+  }
+
+  function handleUpdateUserInfo(data) {
+    setErrorText('');
+
+    updateUserInfo(data)
+      .then((res) => {
+
+        localStorage.setItem('userData', JSON.stringify(res.data));
+        setUserData({
+          email: userData.email,
+          name: userData.name
+        })
+
+        debugger
+      })
+      .catch((err) => {
+        setErrorText(err);
       })
   }
 
@@ -321,8 +331,11 @@ export default React.memo(function App() {
 
       <Route path='/profile' element={<>
         <Header loggedIn={loggedIn} />
-        <Profile />
-        <Footer />
+        <Profile
+          userData={userData}
+          errorText={errorText}
+          handleUpdateUserInfo={handleUpdateUserInfo}
+        />
       </>} />
 
       <Route path='/' element={<>
