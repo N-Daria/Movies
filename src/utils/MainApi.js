@@ -105,3 +105,10 @@ export function logout(data) {
     .then(checkResponse)
 };
 
+export function getSavedMovieList() {
+  return fetch(`${serverRequestConfig.url}/movies`, {
+    headers: serverRequestConfig.headers,
+    credentials: "include",
+  })
+    .then(checkResponse)
+};

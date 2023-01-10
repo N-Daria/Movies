@@ -10,6 +10,7 @@ export default React.memo(function MoviesCardList(props) {
         return <MoviesCard {...movie}
           key={movie.id || movie.movieId}
           handleCardLike={props.handleCardLike}
+          handleCardDelete={props.handleCardDelete}
         />
       })
       }

@@ -4,16 +4,12 @@ import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import React from 'react';
 
 export default React.memo(function Movies(props) {
-  const buttonClass = window.location.pathname === '/movies' && props.addCardButton && props.moviesBlock ? 'content__button_open button' : 'content_none';
+  const buttonClass = props.addCardButton && props.moviesBlock ? 'content__button_open button' : 'content_none';
   const moviesClass = props.moviesBlock ? 'content_open' : 'content_none';
 
   function showContent() {
     props.togglePreloaderBlock(true);
-    props.getBeatFilms()
-      .then(() => {
-        localStorage.setItem('isShortMovie', props.isShortMovie);
-        localStorage.setItem('searchWord', props.searchWord);
-      })
+    props.getBeatFilms();
   }
 
   return (

@@ -36,7 +36,7 @@ export default React.memo(function SearchForm(props) {
   }
 
   return (
-    <form noValidate className='search' name={props.formName} onSubmit={handleSubmit} id='search'>
+    <form noValidate className='search' onSubmit={handleSubmit} id='search'>
       <span className={`${errorText} search__error`}>Нужно ввести ключевое слово</span>
       <input
         id="search-input"

@@ -20,7 +20,7 @@ export default React.memo(function MoviesCard(props) {
           <h3 className='card__header'>{props.nameRU}</h3>
 
           {buttonType ?
-            <button className='card__delete button' type='button' />
+            <button className='card__delete button' type='button' onClick={() => props.handleCardDelete(props)} />
             : <button type='button' className={`card__like button ${likeClass}`} onClick={changeCardLike} />
           }
 

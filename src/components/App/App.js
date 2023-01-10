@@ -14,7 +14,7 @@ import Main from '../Main/Main';
 import { getMovieList } from '../../utils/MoviesApi';
 import Error from '../Error/Error';
 import Preloader from '../Preloader/Preloader';
-import { likeCard, deleteLikeCard, register, login, updateUserInfo, logout } from '../../utils/MainApi';
+import { likeCard, deleteLikeCard, register, login, updateUserInfo, logout, getSavedMovieList } from '../../utils/MainApi';
 
 export default React.memo(function App() {
   const [loggedIn, setLoggedIn] = React.useState(false);
@@ -31,6 +31,7 @@ export default React.memo(function App() {
   const [currentCardsNumber, setCurrentCardsNumber] = React.useState(0);
   const [addCardButton, setAddCardButton] = React.useState(false);
   const [savedMovies, setSavedMovies] = React.useState([]);
+  const [filteredSavedMovies, setFilteredSavedMovies] = React.useState([]);
 
   const userAuthData = JSON.parse(localStorage.getItem('userData')) || '';
 
@@ -111,11 +112,9 @@ export default React.memo(function App() {
       }
     }
 
-    setFilteredList(list);
-
     function setLikes(item) {
       savedMovies.forEach((el) => {
-        if (el.movieId === item.movieId) {
+        if (el.movieId === item.movieId || el.movieId === item.id) {
           item.isLike = true;
         }
       })
@@ -130,11 +129,7 @@ export default React.memo(function App() {
       changeErrorText('Ничего не найдено');
     }
 
-    if (currentCardsNumber >= list.length) {
-      toggleAddCardButton(false);
-    }
-
-    localStorage.setItem('movies', JSON.stringify(list));
+    return list
   };
 
   function openMoreCards() {
@@ -147,9 +142,18 @@ export default React.memo(function App() {
   }
 
   function getBeatFilms() {
-    return getMovieList()
+    getMovieList()
       .then((res) => {
-        filterMovies(searchWord, res);
+        const list = filterMovies(searchWord, res);
+        setFilteredList(list);
+
+        if (currentCardsNumber >= list.length) {
+          toggleAddCardButton(false);
+        }
+
+        localStorage.setItem('movies', JSON.stringify(list));
+        localStorage.setItem('isShortMovie', isShortMovie);
+        localStorage.setItem('searchWord', searchWord);
       })
       .catch((err) => {
         toggleMoviesBlock(false);
@@ -162,6 +166,32 @@ export default React.memo(function App() {
       })
   };
 
+  function getSavedFilms() {
+    getSavedMovieList()
+      .then((res) => {
+        const list = filterMovies(searchWord, res.movies);
+        setFilteredSavedMovies(list);
+      })
+      .catch((err) => {
+        toggleMoviesBlock(false);
+        toggleErrorBlock(true);
+        changeErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
+      })
+      .finally(() => {
+        togglePreloaderBlock(false);
+      })
+  }
+
+  function handleCardDelete(card) {
+    deleteLikeCard(card._id)
+      .then((res) => {
+        setFilteredSavedMovies((state) => {
+          return state.filter(card => card._id !== res.movie._id)
+        })
+      })
+      .catch(console.log)
+  }
+
   function handleCardLike(card) {
 
     function onSetCards(newCard) {
@@ -169,7 +199,6 @@ export default React.memo(function App() {
 
       return setFilteredList((state) => {
         return state.map((cardInCards) => {
-          debugger
           return cardInCards.id === id || cardInCards.movieId === id ? newCard : cardInCards;
         });
       });
@@ -287,6 +316,16 @@ export default React.memo(function App() {
     }
   }, []);
 
+  React.useEffect(() => {
+    getSavedMovieList()
+      .then((res) => {
+        setSavedMovies(res.movies)
+      })
+      .catch((err) => {
+        setErrorText(err);
+      })
+  }, []);
+
   return (
     <Routes>
 
@@ -318,10 +357,10 @@ export default React.memo(function App() {
 
           moviesBlock={moviesBlock}
 
-          togglePreloaderBlock={togglePreloaderBlock}
           getBeatFilms={getBeatFilms}
           filterMovies={filterMovies}
           searchWord={searchWord}
+          togglePreloaderBlock={togglePreloaderBlock}
         />
 
         <Preloader
@@ -338,7 +377,18 @@ export default React.memo(function App() {
 
       <Route path='/saved-movies' element={<>
         <Header loggedIn={loggedIn} />
-        < SavedMovies />
+        < SavedMovies
+          changeSearchWord={changeSearchWord}
+          toggleIsShortMovie={toggleIsShortMovie}
+          isShortMovie={isShortMovie}
+          searchWord={searchWord}
+          moviesBlock={moviesBlock}
+
+          filteredSavedMovies={filteredSavedMovies}
+          getSavedFilms={getSavedFilms}
+          handleCardDelete={handleCardDelete}
+          togglePreloaderBlock={togglePreloaderBlock}
+        />
         <Footer />
       </>} />
 
