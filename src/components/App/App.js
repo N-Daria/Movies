@@ -147,7 +147,6 @@ export default React.memo(function App() {
   }
 
   function getBeatFilms() {
-
     return getMovieList()
       .then((res) => {
         filterMovies(searchWord, res);
@@ -166,9 +165,12 @@ export default React.memo(function App() {
   function handleCardLike(card) {
 
     function onSetCards(newCard) {
+      const id = card.movieId ? card.movieId : card.id;
+
       return setFilteredList((state) => {
         return state.map((cardInCards) => {
-          return cardInCards.id === card.id ? newCard : cardInCards;
+          debugger
+          return cardInCards.id === id || cardInCards.movieId === id ? newCard : cardInCards;
         });
       });
     }
@@ -176,12 +178,13 @@ export default React.memo(function App() {
     card.isLike === true ?
       deleteLikeCard(card._id)
         .then((res) => {
-          onSetCards(res)
+          onSetCards(res.movie)
         })
         .catch(console.log)
       : likeCard(card)
         .then((res) => {
-          onSetCards(res);
+          res.movie.isLike = !res.movie.isLike;
+          onSetCards(res.movie);
         })
         .catch(console.log)
   }
@@ -243,7 +246,6 @@ export default React.memo(function App() {
   }
 
   function handleLogout() {
-
     logout(userData)
       .then((res) => {
         localStorage.clear();
@@ -275,8 +277,7 @@ export default React.memo(function App() {
 
   React.useEffect(() => {
     if (localStorage.getItem('movies')) {
-      setFilteredList(JSON.parse(localStorage.getItem('movies')));
-      toggleMoviesBlock(true)
+      filterMovies(localStorage.getItem('searchWord'), JSON.parse(localStorage.getItem('movies')));
     }
   }, []);
 

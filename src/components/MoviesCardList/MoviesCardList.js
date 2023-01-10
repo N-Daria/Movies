@@ -8,7 +8,7 @@ export default React.memo(function MoviesCardList(props) {
     <ul className='content__list list'>
       {props.renderedCards && props.renderedCards.map(function (movie) {
         return <MoviesCard {...movie}
-          key={movie.id}
+          key={movie.id || movie.movieId}
           handleCardLike={props.handleCardLike}
         />
       })

@@ -5,6 +5,7 @@ const serverRequestConfig = {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
   },
+  cardImageUrl: 'https://api.nomoreparties.co'
 };
 
 const checkResponse = (response) => {
@@ -12,7 +13,10 @@ const checkResponse = (response) => {
     response.json()
     : response.json()
       .then((res) => {
-        return Promise.reject(res.message || res.validation.body.message);
+        return res.validation ?
+          Promise.reject(res.validation.body.message)
+          :
+          Promise.reject(res.message);
       })
 };
 
@@ -27,12 +31,12 @@ export function likeCard(card) {
       duration: card.duration,
       year: card.year,
       description: card.description,
-      image: card.image,
+      image: card.image.url ? `${serverRequestConfig.cardImageUrl}/${card.image.url}` : card.image,
       trailerLink: card.trailerLink,
-      thumbnail: card.thumbnail,
+      thumbnail: card.image.url ? `${serverRequestConfig.cardImageUrl}/${card.image.url}` : card.image,
       nameRU: card.nameRU,
       nameEN: card.nameEN,
-      movieId: card.id
+      movieId: card.id || card.movieId
     })
   })
     .then(checkResponse)
@@ -100,3 +104,4 @@ export function logout(data) {
   })
     .then(checkResponse)
 };
+
