@@ -61,7 +61,7 @@ module.exports.deleteMovie = (req, res, next) => {
         throw new OtherUserInfoError(permissionDeniedMessage);
       }
       movie.delete().then(() => {
-        res.send({ message: 'Фильм удален' });
+        res.send({ message: 'Фильм удален', movie });
       })
         .catch(next);
     })
