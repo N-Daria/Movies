@@ -1,10 +1,9 @@
-const regExEn = /[\w\W][^а-я]/mi;
-const regExRu = /[\W\d][^a-z]/mi;
+const regExEn = /[\w\W\s][^а-я]+/mi;
+const regExRu = /[а-яА-ЯёЁ\s\w]+/mi;
 const allowedCorsUrl = [
-  'http://localhost:3001',
-  'https://localhost:3001',
-  'http://localhost:3002',
-  'https://localhost:3002',
+  'http://localhost:3000',
+  'http://movies.daria.nomoredomains.icu',
+  'https://movies.daria.nomoredomains.icu',
 ];
 
 module.exports = {
