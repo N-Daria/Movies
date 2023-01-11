@@ -14,6 +14,7 @@ import Main from '../Main/Main';
 import { getMovieList } from '../../utils/MoviesApi';
 import Error from '../Error/Error';
 import Preloader from '../Preloader/Preloader';
+import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import { likeCard, deleteLikeCard, register, login, updateUserInfo, logout, getSavedMovieList } from '../../utils/MainApi';
 
 export default React.memo(function App() {
@@ -307,6 +308,7 @@ export default React.memo(function App() {
   React.useEffect(() => {
     if (localStorage.getItem('movies')) {
       filterMovies(localStorage.getItem('searchWord'), JSON.parse(localStorage.getItem('movies')));
+      setFilteredList(JSON.parse(localStorage.getItem('movies')))
     }
   }, []);
 
@@ -329,86 +331,134 @@ export default React.memo(function App() {
   return (
     <Routes>
 
-      <Route path='/signin' element={
-        <Login
-          handleLogin={handleLogin}
-          errorText={errorText}
-        />
-      } />
-      <Route path='/signup' element={
-        <Register
-          handleRegister={handleRegister}
-          errorText={errorText}
-        />
-      } />
+      <Route
+        path='/signin'
+        element={
+          <Login
+            handleLogin={handleLogin}
+            errorText={errorText}
+          />
+        }
+      />
 
-      <Route path='/movies' element={<>
-        <Header loggedIn={loggedIn} />
+      <Route
+        path='/signup'
+        element={
+          <Register
+            handleRegister={handleRegister}
+            errorText={errorText}
+          />
+        }
+      />
 
-        < Movies
-          filteredList={filteredList}
-          changeSearchWord={changeSearchWord}
-          toggleIsShortMovie={toggleIsShortMovie}
-          isShortMovie={isShortMovie}
-          renderedCards={renderedCards}
-          openMoreCards={openMoreCards}
-          addCardButton={addCardButton}
-          handleCardLike={handleCardLike}
+      <Route
+        path='/movies'
+        element={
 
-          moviesBlock={moviesBlock}
+          <ProtectedRoute
+            loggedIn={loggedIn}
+            redirect={redirect}>
 
-          getBeatFilms={getBeatFilms}
-          filterMovies={filterMovies}
-          searchWord={searchWord}
-          togglePreloaderBlock={togglePreloaderBlock}
-        />
+            <Header
+              loggedIn={loggedIn}
+            />
+            < Movies
+              filteredList={filteredList}
+              changeSearchWord={changeSearchWord}
+              toggleIsShortMovie={toggleIsShortMovie}
+              isShortMovie={isShortMovie}
+              renderedCards={renderedCards}
+              openMoreCards={openMoreCards}
+              addCardButton={addCardButton}
+              handleCardLike={handleCardLike}
+              moviesBlock={moviesBlock}
+              getBeatFilms={getBeatFilms}
+              filterMovies={filterMovies}
+              searchWord={searchWord}
+              togglePreloaderBlock={togglePreloaderBlock}
+            />
+            <Preloader
+              preloaderBlock={preloaderBlock}
+            />
+            <Error
+              errorBlock={errorBlock}
+              errorText={errorText}
+            />
 
-        <Preloader
-          preloaderBlock={preloaderBlock}
-        />
+            <Footer />
 
-        <Error
-          errorBlock={errorBlock}
-          errorText={errorText}
-        />
+          </ProtectedRoute>
+        }
+      />
 
-        <Footer />
-      </>} />
+      <Route
+        path='/saved-movies'
+        element={
 
-      <Route path='/saved-movies' element={<>
-        <Header loggedIn={loggedIn} />
-        < SavedMovies
-          changeSearchWord={changeSearchWord}
-          toggleIsShortMovie={toggleIsShortMovie}
-          isShortMovie={isShortMovie}
-          searchWord={searchWord}
-          moviesBlock={moviesBlock}
+          <ProtectedRoute
+            loggedIn={loggedIn}
+            redirect={redirect}>
 
-          filteredSavedMovies={filteredSavedMovies}
-          getSavedFilms={getSavedFilms}
-          handleCardDelete={handleCardDelete}
-          togglePreloaderBlock={togglePreloaderBlock}
-        />
-        <Footer />
-      </>} />
+            <Header
+              loggedIn={loggedIn}
+            />
+            <SavedMovies
+              changeSearchWord={changeSearchWord}
+              toggleIsShortMovie={toggleIsShortMovie}
+              isShortMovie={isShortMovie}
+              searchWord={searchWord}
+              moviesBlock={moviesBlock}
+              filteredSavedMovies={filteredSavedMovies}
+              getSavedFilms={getSavedFilms}
+              handleCardDelete={handleCardDelete}
+              togglePreloaderBlock={togglePreloaderBlock}
+            />
+            <Footer />
 
-      <Route path='/profile' element={<>
-        <Header loggedIn={loggedIn} />
-        <Profile
-          userData={userData}
-          errorText={errorText}
-          handleUpdateUserInfo={handleUpdateUserInfo}
-          handleLogout={handleLogout}
-        />
-      </>} />
+          </ProtectedRoute>
+        }
+      />
 
-      <Route path='/' element={<>
-        <Header loggedIn={loggedIn} />
-        < Main />
-        <Footer />
-      </>} />
+      <Route
+        path='/profile'
+        element={
 
-      <Route path='*' element={<Undefined />} />
+          <ProtectedRoute
+            loggedIn={loggedIn}
+            redirect={redirect}
+          >
+
+            <Header
+              loggedIn={loggedIn}
+            />
+            <Profile
+              userData={userData}
+              errorText={errorText}
+              handleUpdateUserInfo={handleUpdateUserInfo}
+              handleLogout={handleLogout}
+            />
+
+          </ProtectedRoute>
+        }
+      />
+
+      < Route
+        path='/'
+        element={<>
+          <Header
+            loggedIn={loggedIn}
+          />
+          < Main />
+          <Footer />
+        </>}
+      />
+
+      < Route
+        path='*'
+        element={
+          < Undefined />
+        }
+      />
 
     </Routes>
   );
