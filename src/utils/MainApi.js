@@ -1,6 +1,6 @@
 const serverRequestConfig = {
-  // url: 'https://backend.mesto.nomoredomains.icu',
-  url: 'http://localhost:3001',
+  url: 'https://api.movies.daria.nomoredomains.icu',
+  // url: 'http://localhost:3001',
   headers: {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
