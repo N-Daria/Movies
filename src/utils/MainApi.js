@@ -20,6 +20,16 @@ const checkResponse = (response) => {
       })
 };
 
+// card actions
+
+export function getSavedMovieList() {
+  return fetch(`${serverRequestConfig.url}/movies`, {
+    headers: serverRequestConfig.headers,
+    credentials: "include",
+  })
+    .then(checkResponse)
+};
+
 export function likeCard(card) {
   return fetch(`${serverRequestConfig.url}/movies`, {
     method: 'POST',
@@ -51,6 +61,7 @@ export function deleteLikeCard(id) {
     .then(checkResponse)
 };
 
+// authorization & logout
 
 export function register(data) {
   return fetch(`${serverRequestConfig.url}/signup`, {
@@ -101,14 +112,6 @@ export function logout(data) {
       name: data.name,
       email: data.email,
     })
-  })
-    .then(checkResponse)
-};
-
-export function getSavedMovieList() {
-  return fetch(`${serverRequestConfig.url}/movies`, {
-    headers: serverRequestConfig.headers,
-    credentials: "include",
   })
     .then(checkResponse)
 };
