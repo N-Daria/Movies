@@ -307,8 +307,7 @@ export default React.memo(function App() {
 
   React.useEffect(() => {
     if (localStorage.getItem('movies')) {
-      filterMovies(localStorage.getItem('searchWord'), JSON.parse(localStorage.getItem('movies')));
-      setFilteredList(JSON.parse(localStorage.getItem('movies')))
+      setFilteredList(filterMovies(localStorage.getItem('searchWord'), JSON.parse(localStorage.getItem('movies'))))
     }
   }, []);
 
@@ -370,6 +369,7 @@ export default React.memo(function App() {
               filterMovies={filterMovies}
               searchWord={searchWord}
               togglePreloaderBlock={togglePreloaderBlock}
+              toggleMoviesBlock={toggleMoviesBlock}
             />
             <Preloader
               preloaderBlock={preloaderBlock}
@@ -406,6 +406,7 @@ export default React.memo(function App() {
               getSavedFilms={getSavedFilms}
               handleCardDelete={handleCardDelete}
               togglePreloaderBlock={togglePreloaderBlock}
+              toggleMoviesBlock={toggleMoviesBlock}
             />
             <Footer />
 

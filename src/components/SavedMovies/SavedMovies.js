@@ -6,6 +6,7 @@ export default function SavedMovies(props) {
 
   function showContent() {
     props.togglePreloaderBlock(true);
+    props.toggleMoviesBlock(false)
     props.getSavedFilms();
   }
 

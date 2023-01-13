@@ -9,6 +9,7 @@ export default React.memo(function Movies(props) {
 
   function showContent() {
     props.togglePreloaderBlock(true);
+    props.toggleMoviesBlock(false)
     props.getBeatFilms();
   }
 
