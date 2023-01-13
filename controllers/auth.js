@@ -19,7 +19,8 @@ module.exports.login = (req, res, next) => {
       );
       res.cookie('token', token, {
         httpOnly: true,
-        sameSite: true,
+        sameSite: 'None',
+        secure: true,
         maxAge: 3600000 * 24 * 7,
       });
       res.send({ _id: user._id, name: user.name, email: user.email });
