@@ -58,6 +58,29 @@
   width: 100%;
 }
 
+.profile__button {
+  width: 100%;
+  padding: 15px;
+  text-align: center;
+  background-color: #3456F3;
+  border-radius: 3px;
+  color: white;
+  margin: 0 auto 0;
+
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+.profile__button:hover {
+  opacity: 0.8;
+}
+
+.profile__button_disabled {
+  background-color: #F8F8F8;
+  color: #C2C2C2;
+}
+
 .profile__logout {
   display: block;
   font-weight: 500;
@@ -82,6 +105,12 @@
 
   .profile__edit-block {
     margin: 0 0 117px;
+  }
+
+  .profile__button {
+    font-size: 14px;
+    line-height: 1.2;
+    max-width: 396px;
   }
 }
 

@@ -6,6 +6,10 @@ export default function Profile(props) {
   const [name, setName] = React.useState(props.userData.name);
   const [email, setEmail] = React.useState(props.userData.email);
 
+  const inputList = Array.from(document.querySelectorAll('.profile__user-data'));
+  const formButton = document.querySelector('.profile__button');
+  const buttonDisabledClass = 'profile__button_disabled';
+
   function handleSubmit(e) {
     e.preventDefault();
     props.handleUpdateUserInfo({ name, email });
@@ -22,7 +26,7 @@ export default function Profile(props) {
           <input id="name-input"
             onChange={(event) => {
               setName(event.target.value)
-              inputChange(event)
+              inputChange(event, inputList, formButton, buttonDisabledClass)
             }}
             type="text"
             name="name"
@@ -42,7 +46,7 @@ export default function Profile(props) {
           <input id="email-input"
             onChange={(event) => {
               setEmail(event.target.value)
-              inputChange(event)
+              inputChange(event, inputList, formButton, buttonDisabledClass)
             }}
             type="email"
             name="email"
@@ -57,7 +61,7 @@ export default function Profile(props) {
       </div>
 
       <p className='authorization__error'>{props.errorText}</p>
-      <button className='authorization__button  button authorization__button_disabled ' type="submit">Редактировать</button>
+      <button className='profile__button  button profile__button_disabled' disabled type="submit">Редактировать</button>
 
       <button className='profile__logout button' type='button' onClick={props.handleLogout}>Выйти из аккаунта</button>
     </form>

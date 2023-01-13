@@ -5,6 +5,9 @@ import { inputChange } from '../../utils/formValidation.js';
 export default function Register(props) {
   const [values, setValues] = React.useState({});
 
+  const inputList = Array.from(document.querySelectorAll('.authorization__input'));
+  const formButton = document.querySelector('.authorization__button');
+
   function handleSubmit() {
     props.handleRegister(values);
   }
@@ -26,7 +29,7 @@ export default function Register(props) {
       <input id="name-input"
         onChange={(event) => {
           setValues({ ...values, [event.target.name]: event.target.value })
-          inputChange(event)
+          inputChange(event, inputList, formButton)
         }}
         type="text"
         name="name"
@@ -42,7 +45,7 @@ export default function Register(props) {
       <input id="email-input"
         onChange={(event) => {
           setValues({ ...values, [event.target.name]: event.target.value })
-          inputChange(event)
+          inputChange(event, inputList, formButton)
         }}
         type="email"
         name="email"
@@ -56,7 +59,7 @@ export default function Register(props) {
       <input id="password-input"
         onChange={(event) => {
           setValues({ ...values, [event.target.name]: event.target.value })
-          inputChange(event)
+          inputChange(event, inputList, formButton)
         }}
         type="text"
         name="password"

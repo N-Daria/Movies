@@ -5,6 +5,9 @@ import { inputChange } from '../../utils/formValidation.js';
 export default function Login(props) {
   const [values, setValues] = React.useState({});
 
+  const inputList = Array.from(document.querySelectorAll('.authorization__input'));
+  const formButton = document.querySelector('.authorization__button');
+
   function handleSubmit() {
     props.handleLogin(values)
   }
@@ -25,7 +28,7 @@ export default function Login(props) {
       <input id="email-input"
         onChange={(event) => {
           setValues({ ...values, [event.target.name]: event.target.value })
-          inputChange(event)
+          inputChange(event, inputList, formButton)
         }}
         type="email"
         name="email"
@@ -38,7 +41,7 @@ export default function Login(props) {
       <input id="password-input"
         onChange={(event) => {
           setValues({ ...values, [event.target.name]: event.target.value })
-          inputChange(event)
+          inputChange(event, inputList, formButton)
         }}
         type="text"
         name="password"

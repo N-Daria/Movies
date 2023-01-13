@@ -1,6 +1,6 @@
-export function inputChange(event) {
+export function inputChange(event, inputList, formButton, buttonDisabledClass) {
   isValid(event.target);
-  toggleButtonState();
+  toggleButtonState(inputList, formButton, buttonDisabledClass);
 }
 
 function isValid(formInput) {
@@ -21,14 +21,11 @@ function hideInputError(formInput) {
   error.textContent = '';
 }
 
-function toggleButtonState() {
-  const inputList = Array.from(document.querySelectorAll('.authorization__input'));
-  const formButton = document.querySelector('.authorization__button');
-
+function toggleButtonState(inputList, formButton, buttonDisabledClass) {
   if (hasInvalidInput(inputList)) {
-    disactivateButtonState(formButton)
+    disactivateButtonState(formButton, buttonDisabledClass)
   } else {
-    activateButtonState(formButton)
+    activateButtonState(formButton, buttonDisabledClass)
   }
 }
 
@@ -38,12 +35,12 @@ function hasInvalidInput(inputList) {
   });
 }
 
-function activateButtonState(formButton) {
-  formButton.classList.remove('authorization__button_disabled');
+function activateButtonState(formButton, buttonDisabledClass) {
+  formButton.classList.remove(buttonDisabledClass);
   formButton.disabled = false;
 }
 
-function disactivateButtonState(formButton) {
-  formButton.classList.add('authorization__button_disabled');
+function disactivateButtonState(formButton, buttonDisabledClass) {
+  formButton.classList.add(buttonDisabledClass);
   formButton.disabled = true;
 }
