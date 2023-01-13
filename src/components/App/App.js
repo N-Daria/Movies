@@ -18,7 +18,7 @@ import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import { likeCard, deleteLikeCard, register, login, updateUserInfo, logout, getSavedMovieList } from '../../utils/MainApi';
 
 export default React.memo(function App() {
-  const [loggedIn, setLoggedIn] = React.useState(false);
+  const [loggedIn, setLoggedIn] = React.useState(localStorage.getItem('userData') ? true : false);
   const [filteredList, setFilteredList] = React.useState([]);
   const [renderedCards, setRenderedCards] = React.useState([]);
   const [preloaderBlock, setPreloaderBlock] = React.useState(false);
@@ -73,7 +73,7 @@ export default React.memo(function App() {
 
   const toggleIsShortMovie = React.useCallback(() => {
     isShortMovie ? setIsShortMovie(false) : setIsShortMovie(true);
-  }, [])
+  }, [isShortMovie])
 
   function getScreenWidth() {
     if (window.innerWidth <= 577) {
@@ -296,7 +296,7 @@ export default React.memo(function App() {
     } else {
       setRenderedCards(filteredList.slice(0));
     }
-  }, [filteredList]);
+  }, [filteredList, cardsNumber]);
 
   React.useEffect(() => {
     window.addEventListener("resize", () => setTimeout(() => {
@@ -313,12 +313,6 @@ export default React.memo(function App() {
   }, []);
 
   React.useEffect(() => {
-    if (localStorage.getItem('userData')) {
-      setLoggedIn(true)
-    }
-  }, []);
-
-  React.useEffect(() => {
     getSavedMovieList()
       .then((res) => {
         setSavedMovies(res.movies)
@@ -326,7 +320,7 @@ export default React.memo(function App() {
       .catch((err) => {
         setErrorText(err);
       })
-  }, []);
+  }, [loggedIn]);
 
   return (
     <Routes>
