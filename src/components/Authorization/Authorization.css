@@ -75,6 +75,10 @@ input[name="password"] {
   overflow: hidden;
 }
 
+.authorization__password {
+  color: #EE3465;
+}
+
 .authorization__button {
   max-width: 260px;
   width: 100%;
