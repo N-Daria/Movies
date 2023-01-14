@@ -1,15 +1,24 @@
+import { useNavigate } from "react-router-dom";
 import './Authorization.css';
 import logo from '../../images/logo.svg';
 
 export default function Authorization(props) {
+  const navigate = useNavigate();
+
   function handleSubmit(e) {
     e.preventDefault();
     props.onSubmit();
   }
 
+  function redirect() {
+    navigate('/');
+  }
+
   return (
     <main className='authorization'>
-      <img src={logo} alt='логотип' className="authorization__logo" />
+      <p onClick={redirect}>
+        <img src={logo} alt='логотип' className="authorization__logo" />
+      </p>
       <h2 className='authorization__header'>{props.header}</h2>
       <form name={props.formName} onSubmit={handleSubmit} id={props.formName}>
 
