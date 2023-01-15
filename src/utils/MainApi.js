@@ -115,3 +115,11 @@ export function logout(data) {
   })
     .then(checkResponse)
 };
+
+export function getUserInfo() {
+  return fetch(`${serverRequestConfig.url}/users/me`, {
+    headers: serverRequestConfig.headers,
+    credentials: "include",
+  })
+    .then(checkResponse)
+};
