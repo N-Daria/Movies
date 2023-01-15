@@ -123,18 +123,27 @@ export default React.memo(function App() {
 
     if (list.length >= 1) {
       toggleMoviesBlock(true);
-      toggleAddCardButton(true);
       toggleErrorBlock(false);
     } else {
       toggleErrorBlock(true);
       changeErrorText('Ничего не найдено');
     }
 
+    if (list.length > cardsNumber) {
+      toggleAddCardButton(true);
+    } else {
+      toggleAddCardButton(false);
+    }
+
     return list
   };
 
   function openMoreCards() {
-    setRenderedCards([...renderedCards.concat(filteredList.slice(currentCardsNumber, currentCardsNumber + cardsNumberOnClick))]);
+
+    if (!(renderedCards.length > currentCardsNumber)) {
+      setRenderedCards([...renderedCards.concat(filteredList.slice(currentCardsNumber, currentCardsNumber + cardsNumberOnClick))]);
+    }
+
     setCurrentCardsNumber(currentCardsNumber + cardsNumberOnClick);
 
     if (currentCardsNumber + cardsNumberOnClick >= filteredList.length) {
@@ -218,7 +227,7 @@ export default React.memo(function App() {
       })
       return id;
     }
-    debugger
+
     if (card.isLike === true) {
       const cardId = card._id || findCardId();
 
@@ -307,14 +316,21 @@ export default React.memo(function App() {
 
   React.useEffect(() => {
     getScreenWidth();
-    setCurrentCardsNumber(cardsNumber);
+
+    if (renderedCards.length > cardsNumber) {
+      setRenderedCards(filteredList.slice(0, renderedCards.length));
+      setCurrentCardsNumber(renderedCards.length);
+      return
+    }
+
+    setCurrentCardsNumber(renderedCards.length || cardsNumber);
 
     if (filteredList.length > cardsNumber) {
       setRenderedCards(filteredList.slice(0, cardsNumber));
     } else {
       setRenderedCards(filteredList.slice(0));
     }
-  }, [filteredList, cardsNumber]);
+  }, [filteredList]);
 
   React.useEffect(() => {
     window.addEventListener("resize", () => setTimeout(() => {
@@ -322,6 +338,25 @@ export default React.memo(function App() {
       setCurrentCardsNumber(currentCardsNumber);
     }, 1000));
   });
+
+  React.useEffect(() => {
+    if (localStorage.getItem('movies')) {
+      getSavedMovieList()
+        .then((res) => {
+          setSavedMovies(res.movies);
+          setFilteredSavedMovies(res.movies);
+        })
+        .catch((err) => {
+          setErrorText(err);
+        })
+    }
+  }, [loggedIn]);
+
+  React.useEffect(() => {
+    if (localStorage.getItem('movies')) {
+      setFilteredList(filterMovies(localStorage.getItem('searchWord'), JSON.parse(localStorage.getItem('movies'))))
+    }
+  }, [savedMovies]);
 
   React.useEffect(() => {
     if (localStorage.getItem('movies')) {
@@ -420,8 +455,6 @@ export default React.memo(function App() {
             <SavedMovies
               changeSearchWord={changeSearchWord}
               toggleIsShortMovie={toggleIsShortMovie}
-              isShortMovie={isShortMovie}
-              searchWord={searchWord}
               moviesBlock={moviesBlock}
               filteredSavedMovies={filteredSavedMovies}
               getSavedFilms={getSavedFilms}
