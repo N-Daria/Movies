@@ -9,18 +9,19 @@ export default React.memo(function Movies(props) {
 
   function showContent() {
     props.togglePreloaderBlock(true);
-    props.toggleMoviesBlock(false)
+    props.toggleMoviesBlock(false);
     props.getBeatFilms();
   }
 
   return (
     <>
       <SearchForm
-        changeSearchWord={props.changeSearchWord}
-        toggleIsShortMovie={props.toggleIsShortMovie}
-        isShortMovie={props.isShortMovie}
-        showContent={showContent}
         searchWord={props.searchWord}
+        changeSearchWord={props.changeSearchWord}
+        isShortMovie={props.isShortMovie}
+        toggleIsShortMovie={props.toggleIsShortMovie}
+        showContent={showContent}
+        renderedCards={props.renderedCards}
       />
 
       <main className={`${moviesClass} content`}>

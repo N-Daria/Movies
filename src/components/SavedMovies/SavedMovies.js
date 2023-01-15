@@ -6,15 +6,17 @@ export default function SavedMovies(props) {
 
   function showContent() {
     props.togglePreloaderBlock(true);
-    props.toggleMoviesBlock(false)
+    props.toggleMoviesBlock(false);
     props.getSavedFilms();
   }
 
   return (
     <>
       <SearchForm
-        changeSearchWord={props.changeSearchWord}
+        isShortMovie={props.isShortMovie}
         toggleIsShortMovie={props.toggleIsShortMovie}
+        renderedCards={props.filteredSavedMovies}
+        changeSearchWord={props.changeSearchWord}
         showContent={showContent}
       />
 
