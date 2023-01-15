@@ -15,9 +15,7 @@ export default function SavedMovies(props) {
       <SearchForm
         changeSearchWord={props.changeSearchWord}
         toggleIsShortMovie={props.toggleIsShortMovie}
-        isShortMovie={props.isShortMovie}
         showContent={showContent}
-        searchWord={props.searchWord}
       />
 
       <main className={`${moviesClass} content`}>

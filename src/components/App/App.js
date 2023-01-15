@@ -170,6 +170,9 @@ export default React.memo(function App() {
   function getSavedFilms() {
     getSavedMovieList()
       .then((res) => {
+        if (res.movies.length < 1) {
+          throw new Error();
+        }
         const list = filterMovies(searchWord, res.movies);
         setFilteredSavedMovies(list);
       })
@@ -309,16 +312,19 @@ export default React.memo(function App() {
     if (localStorage.getItem('movies')) {
       setFilteredList(filterMovies(localStorage.getItem('searchWord'), JSON.parse(localStorage.getItem('movies'))))
     }
-  }, []);
+  }, [savedMovies]);
 
   React.useEffect(() => {
-    getSavedMovieList()
-      .then((res) => {
-        setSavedMovies(res.movies)
-      })
-      .catch((err) => {
-        setErrorText(err);
-      })
+    if (localStorage.getItem('movies')) {
+      getSavedMovieList()
+        .then((res) => {
+          setSavedMovies(res.movies);
+          setFilteredSavedMovies(res.movies);
+        })
+        .catch((err) => {
+          setErrorText(err);
+        })
+    }
   }, [loggedIn]);
 
   return (
