@@ -15,10 +15,11 @@ import { getMovieList } from '../../utils/MoviesApi';
 import Error from '../Error/Error';
 import Preloader from '../Preloader/Preloader';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
-import { likeCard, deleteLikeCard, register, login, updateUserInfo, logout, getSavedMovieList } from '../../utils/MainApi';
+import { CurrentUserContext } from '../../contexts/CurrentUserContext';
+import { likeCard, deleteLikeCard, register, login, updateUserInfo, logout, getSavedMovieList, getUserInfo } from '../../utils/MainApi';
 
 export default React.memo(function App() {
-  const [loggedIn, setLoggedIn] = React.useState(localStorage.getItem('userData') ? true : false);
+  const [loggedIn, setLoggedIn] = React.useState(localStorage.getItem("loggedIn") ? true : false);
   const [filteredList, setFilteredList] = React.useState([]);
   const [renderedCards, setRenderedCards] = React.useState([]);
   const [preloaderBlock, setPreloaderBlock] = React.useState(false);
@@ -33,12 +34,10 @@ export default React.memo(function App() {
   const [addCardButton, setAddCardButton] = React.useState(false);
   const [savedMovies, setSavedMovies] = React.useState([]);
   const [filteredSavedMovies, setFilteredSavedMovies] = React.useState([]);
-
-  const userAuthData = JSON.parse(localStorage.getItem('userData')) || '';
-
-  const [userData, setUserData] = React.useState({
-    email: userAuthData.email || '',
-    name: userAuthData.name || ''
+  const [currentUser, setCurrentUser] = React.useState({
+    email: '',
+    name: '',
+    id: ''
   });
 
   const navigate = useNavigate();
@@ -71,9 +70,9 @@ export default React.memo(function App() {
     setErrorText(text)
   }, [])
 
-  const toggleIsShortMovie = React.useCallback(() => {
-    isShortMovie ? setIsShortMovie(false) : setIsShortMovie(true);
-  }, [isShortMovie])
+  const toggleIsShortMovie = React.useCallback((state) => {
+    setIsShortMovie(state)
+  }, [])
 
   function getScreenWidth() {
     if (window.innerWidth <= 577) {
@@ -265,15 +264,12 @@ export default React.memo(function App() {
 
     login(data)
       .then((res) => {
-        localStorage.setItem('userId', JSON.stringify(res._id));
-        localStorage.setItem('userData', JSON.stringify({
+        setCurrentUser({
           name: res.name,
           email: res.email,
-        }));
-        setUserData({
-          name: res.name,
-          email: res.email,
-        })
+          id: res._id
+        });
+        localStorage.setItem("loggedIn", true);
         setLoggedIn(true);
         redirect('/movies');
       })
@@ -287,14 +283,11 @@ export default React.memo(function App() {
 
     updateUserInfo(data)
       .then((res) => {
-        localStorage.setItem('userData', JSON.stringify({
+        setCurrentUser({
           name: res.user.name,
           email: res.user.email,
-        }));
-        setUserData({
-          name: res.user.name,
-          email: res.user.email,
-        })
+          id: res._id
+        });
         setErrorText("Данные успешно изменены!");
       })
       .catch((err) => {
@@ -303,13 +296,22 @@ export default React.memo(function App() {
   }
 
   function handleLogout() {
-    logout(userData)
+    logout(currentUser)
       .then((res) => {
         localStorage.clear();
         setLoggedIn(false);
+        setIsShortMovie(false);
+        setSearchWord(false);
+        setSavedMovies([]);
+        setCurrentUser({
+          email: '',
+          name: '',
+          id: ''
+        })
         redirect('/');
       })
       .catch((err) => {
+        setErrorBlock(true);
         setErrorText(err);
       })
   }
@@ -341,10 +343,26 @@ export default React.memo(function App() {
 
   React.useEffect(() => {
     if (localStorage.getItem('movies')) {
-      getSavedMovieList()
+      setFilteredList(filterMovies(localStorage.getItem('searchWord'), JSON.parse(localStorage.getItem('movies'))))
+    }
+  }, [savedMovies]);
+
+  const handleTokenCheck = React.useCallback(() => {
+    setErrorBlock(false);
+    setErrorText('');
+
+    if (localStorage.getItem("loggedIn")) {
+      Promise.all([getSavedMovieList(), getUserInfo()])
         .then((res) => {
-          setSavedMovies(res.movies);
-          setFilteredSavedMovies(res.movies);
+          const [movies, { name, email, id }] = res;
+          setSavedMovies(movies.movies);
+          setFilteredSavedMovies(movies.movies);
+
+          setCurrentUser({
+            name: name,
+            email: email,
+            id: id
+          });
         })
         .catch((err) => {
           setErrorText(err);
@@ -353,162 +371,153 @@ export default React.memo(function App() {
   }, [loggedIn]);
 
   React.useEffect(() => {
-    if (localStorage.getItem('movies')) {
-      setFilteredList(filterMovies(localStorage.getItem('searchWord'), JSON.parse(localStorage.getItem('movies'))))
-    }
-  }, [savedMovies]);
-
-  React.useEffect(() => {
-    if (localStorage.getItem('movies')) {
-      setFilteredList(filterMovies(localStorage.getItem('searchWord'), JSON.parse(localStorage.getItem('movies'))))
-    }
-  }, [savedMovies]);
-
-  React.useEffect(() => {
-    if (localStorage.getItem('movies')) {
-      getSavedMovieList()
-        .then((res) => {
-          setSavedMovies(res.movies);
-          setFilteredSavedMovies(res.movies);
-        })
-        .catch((err) => {
-          setErrorText(err);
-        })
-    }
-  }, [loggedIn]);
+    handleTokenCheck()
+  }, [loggedIn, handleTokenCheck])
 
   return (
-    <Routes>
+    <CurrentUserContext.Provider value={currentUser}>
+      <Routes>
 
-      <Route
-        path='/signin'
-        element={
-          <Login
-            handleLogin={handleLogin}
-            errorText={errorText}
-          />
-        }
-      />
-
-      <Route
-        path='/signup'
-        element={
-          <Register
-            handleRegister={handleRegister}
-            errorText={errorText}
-          />
-        }
-      />
-
-      <Route
-        path='/movies'
-        element={
-
-          <ProtectedRoute
-            loggedIn={loggedIn}
-            redirect={redirect}>
-
-            <Header
-              loggedIn={loggedIn}
-            />
-            < Movies
-              filteredList={filteredList}
-              changeSearchWord={changeSearchWord}
-              toggleIsShortMovie={toggleIsShortMovie}
-              isShortMovie={isShortMovie}
-              renderedCards={renderedCards}
-              openMoreCards={openMoreCards}
-              addCardButton={addCardButton}
-              handleCardLike={handleCardLike}
-              moviesBlock={moviesBlock}
-              getBeatFilms={getBeatFilms}
-              filterMovies={filterMovies}
-              searchWord={searchWord}
-              togglePreloaderBlock={togglePreloaderBlock}
-              toggleMoviesBlock={toggleMoviesBlock}
-            />
-            <Preloader
-              preloaderBlock={preloaderBlock}
-            />
-            <Error
-              errorBlock={errorBlock}
+        <Route
+          path='/signin'
+          element={
+            <Login
+              handleLogin={handleLogin}
               errorText={errorText}
             />
+          }
+        />
 
-            <Footer />
-
-          </ProtectedRoute>
-        }
-      />
-
-      <Route
-        path='/saved-movies'
-        element={
-
-          <ProtectedRoute
-            loggedIn={loggedIn}
-            redirect={redirect}>
-
-            <Header
-              loggedIn={loggedIn}
-            />
-            <SavedMovies
-              changeSearchWord={changeSearchWord}
-              toggleIsShortMovie={toggleIsShortMovie}
-              moviesBlock={moviesBlock}
-              filteredSavedMovies={filteredSavedMovies}
-              getSavedFilms={getSavedFilms}
-              handleCardDelete={handleCardDelete}
-              togglePreloaderBlock={togglePreloaderBlock}
-              toggleMoviesBlock={toggleMoviesBlock}
-            />
-            <Footer />
-
-          </ProtectedRoute>
-        }
-      />
-
-      <Route
-        path='/profile'
-        element={
-
-          <ProtectedRoute
-            loggedIn={loggedIn}
-            redirect={redirect}
-          >
-
-            <Header
-              loggedIn={loggedIn}
-            />
-            <Profile
-              userData={userData}
+        <Route
+          path='/signup'
+          element={
+            <Register
+              handleRegister={handleRegister}
               errorText={errorText}
-              handleUpdateUserInfo={handleUpdateUserInfo}
-              handleLogout={handleLogout}
             />
+          }
+        />
 
-          </ProtectedRoute>
-        }
-      />
+        <Route
+          path='/movies'
+          element={
 
-      < Route
-        path='/'
-        element={<>
-          <Header
-            loggedIn={loggedIn}
-          />
-          < Main />
-          <Footer />
-        </>}
-      />
+            <ProtectedRoute
+              loggedIn={loggedIn}
+              redirect={redirect}>
 
-      < Route
-        path='*'
-        element={
-          < Undefined />
-        }
-      />
+              <Header
+                loggedIn={loggedIn}
+              />
+              < Movies
+                filteredList={filteredList}
+                changeSearchWord={changeSearchWord}
+                toggleIsShortMovie={toggleIsShortMovie}
+                isShortMovie={isShortMovie}
+                renderedCards={renderedCards}
+                openMoreCards={openMoreCards}
+                addCardButton={addCardButton}
+                handleCardLike={handleCardLike}
+                moviesBlock={moviesBlock}
+                getBeatFilms={getBeatFilms}
+                filterMovies={filterMovies}
+                searchWord={searchWord}
+                togglePreloaderBlock={togglePreloaderBlock}
+                toggleMoviesBlock={toggleMoviesBlock}
+              />
+              <Preloader
+                preloaderBlock={preloaderBlock}
+              />
+              <Error
+                errorBlock={errorBlock}
+                errorText={errorText}
+              />
 
-    </Routes>
+              <Footer />
+
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path='/saved-movies'
+          element={
+
+            <ProtectedRoute
+              loggedIn={loggedIn}
+              redirect={redirect}>
+
+              <Header
+                loggedIn={loggedIn}
+              />
+              <SavedMovies
+                changeSearchWord={changeSearchWord}
+                toggleIsShortMovie={toggleIsShortMovie}
+                moviesBlock={moviesBlock}
+                filteredSavedMovies={filteredSavedMovies}
+                getSavedFilms={getSavedFilms}
+                handleCardDelete={handleCardDelete}
+                togglePreloaderBlock={togglePreloaderBlock}
+                toggleMoviesBlock={toggleMoviesBlock}
+
+                isShortMovie={isShortMovie}
+                searchWord={searchWord}
+              />
+              <Preloader
+                preloaderBlock={preloaderBlock}
+              />
+              <Error
+                errorBlock={errorBlock}
+                errorText={errorText}
+              />
+
+              <Footer />
+
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path='/profile'
+          element={
+
+            <ProtectedRoute
+              loggedIn={loggedIn}
+              redirect={redirect}
+            >
+
+              <Header
+                loggedIn={loggedIn}
+              />
+              <Profile
+                errorText={errorText}
+                handleUpdateUserInfo={handleUpdateUserInfo}
+                handleLogout={handleLogout}
+              />
+
+            </ProtectedRoute>
+          }
+        />
+
+        < Route
+          path='/'
+          element={<>
+            <Header
+              loggedIn={loggedIn}
+            />
+            < Main />
+            <Footer />
+          </>}
+        />
+
+        < Route
+          path='*'
+          element={
+            < Undefined />
+          }
+        />
+
+      </Routes>
+    </CurrentUserContext.Provider>
   );
 });
