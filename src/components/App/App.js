@@ -1,5 +1,5 @@
 import './App.css';
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import React from 'react';
 
 import Header from '../Header/Header';
@@ -381,20 +381,22 @@ export default React.memo(function App() {
         <Route
           path='/signin'
           element={
-            <Login
-              handleLogin={handleLogin}
-              errorText={errorText}
-            />
+            loggedIn ? <Navigate to='/' /> :
+              <Login
+                handleLogin={handleLogin}
+                errorText={errorText}
+              />
           }
         />
 
         <Route
           path='/signup'
           element={
-            <Register
-              handleRegister={handleRegister}
-              errorText={errorText}
-            />
+            loggedIn ? <Navigate to='/' /> :
+              <Register
+                handleRegister={handleRegister}
+                errorText={errorText}
+              />
           }
         />
 
