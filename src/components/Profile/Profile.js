@@ -1,24 +1,43 @@
 import React from 'react';
 import './Profile.css';
-import { inputChange } from '../../utils/formValidation.js';
+import { inputChange, disactivateButtonState } from '../../utils/formValidation.js';
 import { RegExEmail, RegExName } from '../../utils/consts.js';
+import { CurrentUserContext } from "../../contexts/CurrentUserContext.js";
 
 export default function Profile(props) {
-  const [name, setName] = React.useState(props.userData.name);
-  const [email, setEmail] = React.useState(props.userData.email);
+  const currentUserContext = React.useContext(CurrentUserContext);
+  const [name, setName] = React.useState(currentUserContext.name);
+  const [email, setEmail] = React.useState(currentUserContext.email);
+
+  const [newName, setNewName] = React.useState(currentUserContext.name);
+  const [newEmail, setNewEmail] = React.useState(currentUserContext.email);
 
   const inputList = Array.from(document.querySelectorAll('.profile__user-data'));
   const formButton = document.querySelector('.profile__button');
   const buttonDisabledClass = 'profile__button_disabled';
 
+  React.useEffect(() => {
+    setName(currentUserContext.name);
+    setEmail(currentUserContext.email);
+
+    setNewName(currentUserContext.name);
+    setNewEmail(currentUserContext.email);
+  }, [currentUserContext]);
+
   function handleSubmit(e) {
     e.preventDefault();
-    props.handleUpdateUserInfo({ name, email });
+
+    if (name === newName && email === newEmail) {
+      props.changeErrorText('Данные должны отличаться от первоначальных');
+      disactivateButtonState(formButton, buttonDisabledClass)
+    } else {
+      props.handleUpdateUserInfo({ name: newName, email: newEmail });
+    }
   }
 
   return (
     <form className='profile' name='edit' onSubmit={handleSubmit} id='edit'>
-      <h2 className='profile__header'>Привет, {props.userData.name}!</h2>
+      <h2 className='profile__header'>Привет, {currentUserContext.name}!</h2>
 
       <div className='profile__edit-block'>
 
@@ -26,8 +45,9 @@ export default function Profile(props) {
           <p className='profile__data-type'>Имя</p>
           <input id="name-input"
             onChange={(event) => {
-              setName(event.target.value)
-              inputChange(event, inputList, formButton, buttonDisabledClass)
+              props.changeErrorText('');
+              setNewEmail(event.target.value);
+              inputChange(event, inputList, formButton, buttonDisabledClass);
             }}
             type="text"
             name="name"
@@ -36,7 +56,7 @@ export default function Profile(props) {
             minLength="2"
             maxLength="30"
             pattern={RegExName}
-            value={name}
+            value={newName}
           />
         </div>
 
@@ -46,14 +66,15 @@ export default function Profile(props) {
           <p className='profile__data-type'>E&#8209;mail</p>
           <input id="email-input"
             onChange={(event) => {
-              setEmail(event.target.value)
-              inputChange(event, inputList, formButton, buttonDisabledClass)
+              props.changeErrorText('');
+              setNewEmail(event.target.value);
+              inputChange(event, inputList, formButton, buttonDisabledClass);
             }}
             type="email"
             name="email"
             className="profile__user-data"
             required
-            value={email}
+            value={newEmail}
             pattern={RegExEmail}
           />
         </div>

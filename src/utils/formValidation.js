@@ -40,7 +40,7 @@ function activateButtonState(formButton, buttonDisabledClass) {
   formButton.disabled = false;
 }
 
-function disactivateButtonState(formButton, buttonDisabledClass) {
+export function disactivateButtonState(formButton, buttonDisabledClass) {
   formButton.classList.add(buttonDisabledClass);
   formButton.disabled = true;
 }

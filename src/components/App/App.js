@@ -493,6 +493,7 @@ export default React.memo(function App() {
                 errorText={errorText}
                 handleUpdateUserInfo={handleUpdateUserInfo}
                 handleLogout={handleLogout}
+                changeErrorText={changeErrorText}
               />
 
             </ProtectedRoute>
