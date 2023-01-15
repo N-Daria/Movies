@@ -3,47 +3,53 @@ import React from 'react';
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 
 export default React.memo(function SearchForm(props) {
-  const [errorText, setErrorText] = React.useState("");
-  const [isNameValid, setIsNameValid] = React.useState(false);
+  const [errClass, setErrClass] = React.useState("");
+  const [searchWord, setSearchWord] = React.useState("");
+  const defaultIsShort = window.location.pathname === "/saved-movies" ? false : props.isShortMovie;
 
   function inputChange(event) {
-    getInputValue(event);
-    isValid(event.target);
+    props.changeSearchWord(event.target.value);
+    setSearchWord(event.target.value);
+    validateInput(event.target.value);
   }
 
-  function getInputValue(event) {
-    if (event.target.name === 'movieName') {
-      props.changeSearchWord(`${event.target.value}`);
-    }
-  }
-
-  function isValid(formInput) {
-    if (formInput.validity.valid) {
-      setErrorText('');
-      setIsNameValid(true);
+  function validateInput(data) {
+    if (data === '') {
+      setErrClass('search__error_open');
+      return false
     } else {
-      setErrorText('search__error_open');
-      setIsNameValid(false);
+      setErrClass('search__error_hide');
+      return true
     }
   }
 
   function handleSubmit(event) {
-    event.preventDefault();
-
-    if (isNameValid || props.isShortMovie) {
-      props.showContent();
+    if (event) {
+      event.preventDefault();
+      if (props.isShortMovie || validateInput(searchWord)) {
+        props.showContent();
+      }
+    } else {
+      if (props.renderedCards) {
+        props.showContent();
+      }
     }
   }
 
+  React.useEffect(() => {
+    if (window.location.pathname === "/saved-movies") {
+      props.toggleIsShortMovie(false);
+    }
+  }, [])
+
   return (
-    <form noValidate className='search' onSubmit={handleSubmit} id='search'>
-      <span className={`${errorText} search__error`}>Нужно ввести ключевое слово</span>
+    <form className='search' onSubmit={handleSubmit} id='search'>
+      <span className={`${errClass} search__error`}>Нужно ввести ключевое слово или переключить поиск короткометражек</span>
       <input
         id="search-input"
         name="movieName"
         className="search__input"
         placeholder="Фильм"
-        required
         type="text"
         onChange={inputChange}
         value={props.searchWord}
@@ -52,7 +58,8 @@ export default React.memo(function SearchForm(props) {
 
       <FilterCheckbox
         toggleIsShortMovie={props.toggleIsShortMovie}
-        isShortMovie={props.isShortMovie}
+        defaultIsShort={defaultIsShort}
+        handleSubmit={handleSubmit}
       />
 
     </form>

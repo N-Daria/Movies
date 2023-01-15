@@ -19,14 +19,14 @@ import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import { likeCard, deleteLikeCard, register, login, updateUserInfo, logout, getSavedMovieList, getUserInfo } from '../../utils/MainApi';
 
 export default React.memo(function App() {
-  const [loggedIn, setLoggedIn] = React.useState(localStorage.getItem("loggedIn") ? true : false);
+  const [loggedIn, setLoggedIn] = React.useState(Boolean(localStorage.getItem("loggedIn")));
   const [filteredList, setFilteredList] = React.useState([]);
   const [renderedCards, setRenderedCards] = React.useState([]);
   const [preloaderBlock, setPreloaderBlock] = React.useState(false);
   const [moviesBlock, setMoviesBlock] = React.useState(false);
   const [errorBlock, setErrorBlock] = React.useState(false);
   const [errorText, setErrorText] = React.useState('');
-  const [isShortMovie, setIsShortMovie] = React.useState(localStorage.getItem('isShortMovie') === 'true' || false);
+  const [isShortMovie, setIsShortMovie] = React.useState(Boolean(localStorage.getItem('isShortMovie')));
   const [searchWord, setSearchWord] = React.useState(localStorage.getItem('searchWord') || '');
   const [cardsNumberOnClick, setCardsNumberOnClick] = React.useState(0);
   const [cardsNumber, setCardsNumber] = React.useState(0);

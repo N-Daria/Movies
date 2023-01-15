@@ -1,7 +1,12 @@
 import './FilterCheckbox.css';
 
 export default function FilterCheckbox(props) {
-  const setIsChecked = props.isShortMovie ? true : false;
+  const setIsChecked = props.defaultIsShort ? true : false;
+
+  function toggleCheckbox() {
+    props.defaultIsShort ? props.toggleIsShortMovie(false) : props.toggleIsShortMovie(true);
+    props.handleSubmit();
+  }
 
   return (
     <div className='filter'>
@@ -10,7 +15,7 @@ export default function FilterCheckbox(props) {
         name="filter-input"
         className="filter__input"
         type="checkbox"
-        onClick={props.toggleIsShortMovie}
+        onClick={toggleCheckbox}
         defaultChecked={setIsChecked}
       />
       <label htmlFor="filter-input" className='filter__input-label' />
