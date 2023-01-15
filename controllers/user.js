@@ -5,7 +5,7 @@ const { incorrectDataMessage, undefinedMessage } = require('../errors/responseMe
 
 module.exports.getUserInfo = (req, res, next) => {
   User.findById(req.user._id)
-    .then((user) => res.send({ email: user.email, name: user.name }))
+    .then((user) => res.send({ email: user.email, name: user.name, id: req.user._id }))
     .catch(next);
 };
 
