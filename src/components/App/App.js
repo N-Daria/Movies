@@ -208,18 +208,33 @@ export default React.memo(function App() {
       });
     }
 
-    card.isLike === true ?
-      deleteLikeCard(card._id)
+    function findCardId() {
+      let id = '';
+      savedMovies.forEach((el) => {
+        if (el.movieId === card.id) {
+          id = el._id;
+          return
+        }
+      })
+      return id;
+    }
+    debugger
+    if (card.isLike === true) {
+      const cardId = card._id || findCardId();
+
+      deleteLikeCard(cardId)
         .then((res) => {
           onSetCards(res.movie)
         })
         .catch(console.log)
-      : likeCard(card)
+    } else {
+      likeCard(card)
         .then((res) => {
-          res.movie.isLike = !res.movie.isLike;
+          res.movie.isLike = true;
           onSetCards(res.movie);
         })
         .catch(console.log)
+    }
   }
 
   function handleRegister(data) {
