@@ -30,7 +30,7 @@ export default React.memo(function SearchForm(props) {
         props.showContent();
       }
     } else {
-      if (props.renderedCards) {
+      if (props.renderedCards.length > 1) {
         props.showContent();
       }
     }
