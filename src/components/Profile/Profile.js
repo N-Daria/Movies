@@ -1,6 +1,7 @@
 import React from 'react';
 import './Profile.css';
 import { inputChange } from '../../utils/formValidation.js';
+import { RegExEmail, RegExName } from '../../utils/consts.js';
 
 export default function Profile(props) {
   const [name, setName] = React.useState(props.userData.name);
@@ -34,7 +35,7 @@ export default function Profile(props) {
             required
             minLength="2"
             maxLength="30"
-            pattern="[a-zA-Zа-яА-ЯЁё\-\s]+"
+            pattern={RegExName}
             value={name}
           />
         </div>
@@ -53,6 +54,7 @@ export default function Profile(props) {
             className="profile__user-data"
             required
             value={email}
+            pattern={RegExEmail}
           />
         </div>
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import Authorization from '../Authorization/Authorization';
 import { inputChange } from '../../utils/formValidation.js';
+import { RegExEmail } from '../../utils/consts.js';
 
 export default function Login(props) {
   const [values, setValues] = React.useState({});
@@ -35,6 +36,7 @@ export default function Login(props) {
         name="email"
         className="authorization__input"
         required
+        pattern={RegExEmail}
       />
       <span className="email-input-error input-err-text"></span>
 

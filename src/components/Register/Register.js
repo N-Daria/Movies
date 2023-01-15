@@ -1,6 +1,7 @@
 import React from 'react';
 import Authorization from '../Authorization/Authorization';
 import { inputChange } from '../../utils/formValidation.js';
+import { RegExEmail, RegExName } from '../../utils/consts.js';
 
 export default function Register(props) {
   const [values, setValues] = React.useState({});
@@ -38,7 +39,7 @@ export default function Register(props) {
         required
         minLength="2"
         maxLength="30"
-        pattern="[a-zA-Zа-яА-ЯЁё\-\s]+"
+        pattern={RegExName}
       />
       <span className="name-input-error input-err-text"></span>
 
@@ -52,6 +53,7 @@ export default function Register(props) {
         name="email"
         className="authorization__input"
         required
+        pattern={RegExEmail}
       />
       <span className="email-input-error input-err-text"></span>
 
