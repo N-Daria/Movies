@@ -24,16 +24,16 @@ export default React.memo(function SearchForm(props) {
   }
 
   function handleSubmit(event) {
-    if (event) {
-      event.preventDefault();
-      if (props.isShortMovie || validateInput(searchWord)) {
-        props.showContent();
-      }
-    } else {
-      if (props.renderedCards.length > 1) {
-        props.showContent();
-      }
+    // if (event) {
+    event.preventDefault();
+    if (props.isShortMovie || validateInput(searchWord)) {
+      props.showContent();
     }
+    // } else {
+    // if (props.renderedCards.length > 1) {
+    //   props.showContent();
+    // }
+    // }
   }
 
   React.useEffect(() => {
