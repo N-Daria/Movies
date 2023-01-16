@@ -24,7 +24,7 @@ export default React.memo(function SearchForm(props) {
     if (submit) {
       submit.preventDefault();
       if (props.isShortMovie || validateInput(props.searchWord)) {
-        props.showContent();
+        props.showContent(props.isShortMovie);
       }
     } else {
       if (props.renderedCards.length >= 1) {
