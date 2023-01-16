@@ -7,19 +7,22 @@ export default React.memo(function Movies(props) {
   const buttonClass = props.addCardButton && props.moviesBlock ? 'content__button_open button' : 'content_none';
   const moviesClass = props.moviesBlock ? 'content_open' : 'content_none';
 
+  const [isShortMovie, setIsShortMovie] = React.useState(JSON.parse(localStorage.getItem('isShortMovie')));
+  const [searchWord, setSearchWord] = React.useState(localStorage.getItem('searchWord') || '');
+
   function showContent() {
     props.togglePreloaderBlock(true);
     props.toggleMoviesBlock(false);
-    props.getBeatFilms();
+    props.getBeatFilms(searchWord, isShortMovie);
   }
 
   return (
     <>
       <SearchForm
-        searchWord={props.searchWord}
-        changeSearchWord={props.changeSearchWord}
-        isShortMovie={props.isShortMovie}
-        toggleIsShortMovie={props.toggleIsShortMovie}
+        searchWord={searchWord}
+        setSearchWord={setSearchWord}
+        isShortMovie={isShortMovie}
+        setIsShortMovie={setIsShortMovie}
         showContent={showContent}
         renderedCards={props.renderedCards}
       />

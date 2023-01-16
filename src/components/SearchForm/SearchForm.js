@@ -4,12 +4,9 @@ import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 
 export default React.memo(function SearchForm(props) {
   const [errClass, setErrClass] = React.useState("");
-  const [searchWord, setSearchWord] = React.useState("");
-  const defaultIsShort = window.location.pathname === "/saved-movies" ? false : props.isShortMovie;
 
   function inputChange(event) {
-    props.changeSearchWord(event.target.value);
-    setSearchWord(event.target.value);
+    props.setSearchWord(event.target.value);
     validateInput(event.target.value);
   }
 
@@ -24,23 +21,18 @@ export default React.memo(function SearchForm(props) {
   }
 
   function handleSubmit(event) {
+    debugger
     // if (event) {
     event.preventDefault();
-    if (props.isShortMovie || validateInput(searchWord)) {
+    if (props.isShortMovie || validateInput(props.searchWord)) {
       props.showContent();
     }
     // } else {
-    // if (props.renderedCards.length > 1) {
-    //   props.showContent();
-    // }
+    //   if (props.renderedCards.length > 1) {
+    //     props.showContent();
+    //   }
     // }
   }
-
-  React.useEffect(() => {
-    if (window.location.pathname === "/saved-movies") {
-      props.toggleIsShortMovie(false);
-    }
-  }, [])
 
   return (
     <form className='search' onSubmit={handleSubmit} id='search'>
@@ -57,8 +49,8 @@ export default React.memo(function SearchForm(props) {
       <button type='submit' className='search__button button' />
 
       <FilterCheckbox
-        toggleIsShortMovie={props.toggleIsShortMovie}
-        defaultIsShort={defaultIsShort}
+        setIsShortMovie={props.setIsShortMovie}
+        isShortMovie={props.isShortMovie}
         handleSubmit={handleSubmit}
       />
 

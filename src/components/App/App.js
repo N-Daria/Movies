@@ -19,15 +19,13 @@ import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import { likeCard, deleteLikeCard, register, login, updateUserInfo, logout, getSavedMovieList, getUserInfo } from '../../utils/MainApi';
 
 export default React.memo(function App() {
-  const [loggedIn, setLoggedIn] = React.useState(Boolean(localStorage.getItem("loggedIn")));
+  const [loggedIn, setLoggedIn] = React.useState(JSON.parse(localStorage.getItem("loggedIn")));
   const [filteredList, setFilteredList] = React.useState([]);
   const [renderedCards, setRenderedCards] = React.useState([]);
   const [preloaderBlock, setPreloaderBlock] = React.useState(false);
   const [moviesBlock, setMoviesBlock] = React.useState(false);
   const [errorBlock, setErrorBlock] = React.useState(false);
   const [errorText, setErrorText] = React.useState('');
-  const [isShortMovie, setIsShortMovie] = React.useState(Boolean(localStorage.getItem('isShortMovie')));
-  const [searchWord, setSearchWord] = React.useState(localStorage.getItem('searchWord') || '');
   const [cardsNumberOnClick, setCardsNumberOnClick] = React.useState(0);
   const [cardsNumber, setCardsNumber] = React.useState(0);
   const [currentCardsNumber, setCurrentCardsNumber] = React.useState(0);
@@ -50,10 +48,6 @@ export default React.memo(function App() {
     setAddCardButton(state);
   }, [])
 
-  const changeSearchWord = React.useCallback((state) => {
-    setSearchWord(state);
-  }, [])
-
   const togglePreloaderBlock = React.useCallback((state) => {
     setPreloaderBlock(state);
   }, [])
@@ -68,10 +62,6 @@ export default React.memo(function App() {
 
   const changeErrorText = React.useCallback((text) => {
     setErrorText(text)
-  }, [])
-
-  const toggleIsShortMovie = React.useCallback((state) => {
-    setIsShortMovie(state)
   }, [])
 
   function getScreenWidth() {
@@ -90,7 +80,7 @@ export default React.memo(function App() {
     }
   }
 
-  function filterMovies(movieName, allMovies) {
+  function filterMovies(movieName, allMovies, isShortMovie) {
     movieName = movieName.toLowerCase();
     const movieDuration = isShortMovie ? 40 : 10000;
     const list = [];
@@ -150,10 +140,10 @@ export default React.memo(function App() {
     }
   }
 
-  function getBeatFilms() {
+  function getBeatFilms(searchWord, isShortMovie) {
     getMovieList()
       .then((res) => {
-        const list = filterMovies(searchWord, res);
+        const list = filterMovies(searchWord, res, isShortMovie);
         setFilteredList(list);
 
         if (currentCardsNumber >= list.length) {
@@ -175,13 +165,13 @@ export default React.memo(function App() {
       })
   };
 
-  function getSavedFilms() {
+  function getSavedFilms(searchWord, isShortMovie) {
     getSavedMovieList()
       .then((res) => {
         if (res.movies.length < 1) {
           throw new Error();
         }
-        const list = filterMovies(searchWord, res.movies);
+        const list = filterMovies(searchWord, res.movies, isShortMovie);
         setFilteredSavedMovies(list);
       })
       .catch((err) => {
@@ -300,8 +290,6 @@ export default React.memo(function App() {
       .then((res) => {
         localStorage.clear();
         setLoggedIn(false);
-        setIsShortMovie(false);
-        setSearchWord(false);
         setSavedMovies([]);
         setCurrentUser({
           email: '',
@@ -413,9 +401,6 @@ export default React.memo(function App() {
               />
               < Movies
                 filteredList={filteredList}
-                changeSearchWord={changeSearchWord}
-                toggleIsShortMovie={toggleIsShortMovie}
-                isShortMovie={isShortMovie}
                 renderedCards={renderedCards}
                 openMoreCards={openMoreCards}
                 addCardButton={addCardButton}
@@ -423,7 +408,6 @@ export default React.memo(function App() {
                 moviesBlock={moviesBlock}
                 getBeatFilms={getBeatFilms}
                 filterMovies={filterMovies}
-                searchWord={searchWord}
                 togglePreloaderBlock={togglePreloaderBlock}
                 toggleMoviesBlock={toggleMoviesBlock}
               />
@@ -453,17 +437,12 @@ export default React.memo(function App() {
                 loggedIn={loggedIn}
               />
               <SavedMovies
-                changeSearchWord={changeSearchWord}
-                toggleIsShortMovie={toggleIsShortMovie}
                 moviesBlock={moviesBlock}
                 filteredSavedMovies={filteredSavedMovies}
                 getSavedFilms={getSavedFilms}
                 handleCardDelete={handleCardDelete}
                 togglePreloaderBlock={togglePreloaderBlock}
                 toggleMoviesBlock={toggleMoviesBlock}
-
-                isShortMovie={isShortMovie}
-                searchWord={searchWord}
               />
               <Preloader
                 preloaderBlock={preloaderBlock}

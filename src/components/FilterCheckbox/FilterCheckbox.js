@@ -1,10 +1,10 @@
 import './FilterCheckbox.css';
 
 export default function FilterCheckbox(props) {
-  const setIsChecked = props.defaultIsShort ? true : false;
+  const setIsChecked = props.isShortMovie ? true : false;
 
   function toggleCheckbox() {
-    props.defaultIsShort ? props.toggleIsShortMovie(false) : props.toggleIsShortMovie(true);
+    props.setIsShortMovie(!props.isShortMovie);
     // props.handleSubmit();
   }
 
