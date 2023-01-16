@@ -20,18 +20,17 @@ export default React.memo(function SearchForm(props) {
     }
   }
 
-  function handleSubmit(event) {
-    debugger
-    // if (event) {
-    event.preventDefault();
-    if (props.isShortMovie || validateInput(props.searchWord)) {
-      props.showContent();
+  function handleSubmit(submit, isShort) {
+    if (submit) {
+      submit.preventDefault();
+      if (props.isShortMovie || validateInput(props.searchWord)) {
+        props.showContent();
+      }
+    } else {
+      if (props.renderedCards.length >= 1) {
+        props.showContent(isShort);
+      }
     }
-    // } else {
-    //   if (props.renderedCards.length > 1) {
-    //     props.showContent();
-    //   }
-    // }
   }
 
   return (

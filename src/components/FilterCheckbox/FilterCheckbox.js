@@ -5,7 +5,7 @@ export default function FilterCheckbox(props) {
 
   function toggleCheckbox() {
     props.setIsShortMovie(!props.isShortMovie);
-    // props.handleSubmit();
+    props.handleSubmit(false, !props.isShortMovie);
   }
 
   return (
