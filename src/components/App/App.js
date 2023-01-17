@@ -44,25 +44,7 @@ export default React.memo(function App() {
     navigate(path);
   }
 
-  const toggleAddCardButton = React.useCallback((state) => {
-    setAddCardButton(state);
-  }, [])
-
-  const togglePreloaderBlock = React.useCallback((state) => {
-    setPreloaderBlock(state);
-  }, [])
-
-  const toggleMoviesBlock = React.useCallback((state) => {
-    setMoviesBlock(state);
-  }, [])
-
-  const toggleErrorBlock = React.useCallback((state) => {
-    setErrorBlock(state)
-  }, [])
-
-  const changeErrorText = React.useCallback((text) => {
-    setErrorText(text)
-  }, [])
+  // getting needed number of cards on page
 
   function getScreenWidth() {
     if (window.innerWidth <= 577) {
@@ -79,6 +61,8 @@ export default React.memo(function App() {
       setCardsNumberOnClick(4);
     }
   }
+
+  // movies filter
 
   function filterMovies(movieName, allMovies, isShortMovie) {
     movieName = movieName.toLowerCase();
@@ -111,21 +95,23 @@ export default React.memo(function App() {
     }
 
     if (list.length >= 1) {
-      toggleMoviesBlock(true);
-      toggleErrorBlock(false);
+      setMoviesBlock(true);
+      setErrorBlock(false);
     } else {
-      toggleErrorBlock(true);
-      changeErrorText('Ничего не найдено');
+      setErrorBlock(true);
+      setErrorText('Ничего не найдено');
     }
 
     if (list.length > cardsNumber) {
-      toggleAddCardButton(true);
+      setAddCardButton(true);
     } else {
-      toggleAddCardButton(false);
+      setAddCardButton(false);
     }
 
     return list
-  };
+  }
+
+  // add button's work
 
   function openMoreCards() {
 
@@ -136,13 +122,11 @@ export default React.memo(function App() {
     setCurrentCardsNumber(currentCardsNumber + cardsNumberOnClick);
 
     if (currentCardsNumber + cardsNumberOnClick >= filteredList.length) {
-      toggleAddCardButton(false);
+      setAddCardButton(false);
     }
   }
 
-  React.useEffect(() => {
-    togglePreloaderBlock(false);
-  }, [filteredSavedMovies, filteredList])
+  // api requests or data extraction
 
   function getBeatFilms(searchWord, isShortMovie) {
     if (localStorage.getItem('allBeatMovies')) {
@@ -154,7 +138,7 @@ export default React.memo(function App() {
           setFilteredList(list);
 
           if (currentCardsNumber >= list.length) {
-            toggleAddCardButton(false);
+            setAddCardButton(false);
           }
 
           localStorage.setItem('allBeatMovies', JSON.stringify(res))
@@ -163,13 +147,13 @@ export default React.memo(function App() {
           localStorage.setItem('searchWord', searchWord);
         })
         .catch((err) => {
-          toggleMoviesBlock(false);
-          toggleAddCardButton(false);
-          toggleErrorBlock(true);
-          changeErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
+          setMoviesBlock(false);
+          setAddCardButton(false);
+          setErrorBlock(true);
+          setErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
         })
         .finally(() => {
-          togglePreloaderBlock(false);
+          setPreloaderBlock(false);
         })
     }
   };
@@ -187,15 +171,17 @@ export default React.memo(function App() {
           setFilteredSavedMovies(list);
         })
         .catch((err) => {
-          toggleMoviesBlock(false);
-          toggleErrorBlock(true);
-          changeErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
+          setMoviesBlock(false);
+          setErrorBlock(true);
+          setErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
         })
         .finally(() => {
-          togglePreloaderBlock(false);
+          setPreloaderBlock(false);
         })
     }
   }
+
+  // card's actions
 
   function handleCardDelete(card) {
     deleteLikeCard(card._id)
@@ -247,6 +233,8 @@ export default React.memo(function App() {
         .catch(console.log)
     }
   }
+
+  // authorization, update user info && logout 
 
   function handleRegister(data) {
     setErrorText('');
@@ -317,6 +305,8 @@ export default React.memo(function App() {
       })
   }
 
+  // set rendered card number
+
   React.useEffect(() => {
     getScreenWidth();
 
@@ -335,6 +325,15 @@ export default React.memo(function App() {
     }
   }, [filteredList]);
 
+
+  // turn off preloader block after movies render
+
+  React.useEffect(() => {
+    setPreloaderBlock(false);
+  }, [filteredSavedMovies, filteredList])
+
+  // check window screen width
+
   React.useEffect(() => {
     window.addEventListener("resize", () => setTimeout(() => {
       getScreenWidth();
@@ -342,11 +341,15 @@ export default React.memo(function App() {
     }, 1000));
   });
 
+  // set default saved movies
+
   React.useEffect(() => {
     if (localStorage.getItem('movies')) {
       setFilteredList(filterMovies(localStorage.getItem('searchWord'), JSON.parse(localStorage.getItem('movies'))))
     }
   }, [savedMovies]);
+
+  // chech if user is registered & get default user & saved movies information 
 
   const handleTokenCheck = React.useCallback(() => {
     setErrorBlock(false);
@@ -421,8 +424,8 @@ export default React.memo(function App() {
                 moviesBlock={moviesBlock}
                 getBeatFilms={getBeatFilms}
                 filterMovies={filterMovies}
-                togglePreloaderBlock={togglePreloaderBlock}
-                toggleMoviesBlock={toggleMoviesBlock}
+                setPreloaderBlock={setPreloaderBlock}
+                setMoviesBlock={setMoviesBlock}
               />
               <Preloader
                 preloaderBlock={preloaderBlock}
@@ -454,8 +457,8 @@ export default React.memo(function App() {
                 filteredSavedMovies={filteredSavedMovies}
                 getSavedFilms={getSavedFilms}
                 handleCardDelete={handleCardDelete}
-                togglePreloaderBlock={togglePreloaderBlock}
-                toggleMoviesBlock={toggleMoviesBlock}
+                setPreloaderBlock={setPreloaderBlock}
+                setMoviesBlock={setMoviesBlock}
               />
               <Preloader
                 preloaderBlock={preloaderBlock}
@@ -487,7 +490,7 @@ export default React.memo(function App() {
                 errorText={errorText}
                 handleUpdateUserInfo={handleUpdateUserInfo}
                 handleLogout={handleLogout}
-                changeErrorText={changeErrorText}
+                setErrorText={setErrorText}
               />
 
             </ProtectedRoute>

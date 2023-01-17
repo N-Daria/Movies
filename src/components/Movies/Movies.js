@@ -11,8 +11,8 @@ export default React.memo(function Movies(props) {
   const [searchWord, setSearchWord] = React.useState(localStorage.getItem('searchWord') || '');
 
   function showContent(isShort) {
-    props.togglePreloaderBlock(true);
-    props.toggleMoviesBlock(false);
+    props.setPreloaderBlock(true);
+    props.setMoviesBlock(false);
     props.getBeatFilms(searchWord, isShort);
   }
 

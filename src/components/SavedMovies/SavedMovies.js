@@ -8,8 +8,8 @@ export default function SavedMovies(props) {
   const [searchWord, setSearchWord] = React.useState('');
 
   function showContent(isShort) {
-    props.togglePreloaderBlock(true);
-    props.toggleMoviesBlock(false);
+    props.setPreloaderBlock(true);
+    props.setMoviesBlock(false);
     props.getSavedFilms(searchWord, isShort);
   }
 

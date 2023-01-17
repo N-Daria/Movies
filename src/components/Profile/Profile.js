@@ -28,7 +28,7 @@ export default function Profile(props) {
     e.preventDefault();
 
     if (name === newName && email === newEmail) {
-      props.changeErrorText('Данные должны отличаться от первоначальных');
+      props.setErrorText('Данные должны отличаться от первоначальных');
       disactivateButtonState(formButton, buttonDisabledClass)
     } else {
       props.handleUpdateUserInfo({ name: newName, email: newEmail });
@@ -45,7 +45,7 @@ export default function Profile(props) {
           <p className='profile__data-type'>Имя</p>
           <input id="name-input"
             onChange={(event) => {
-              props.changeErrorText('');
+              props.setErrorText('');
               setNewEmail(event.target.value);
               inputChange(event, inputList, formButton, buttonDisabledClass);
             }}
@@ -66,7 +66,7 @@ export default function Profile(props) {
           <p className='profile__data-type'>E&#8209;mail</p>
           <input id="email-input"
             onChange={(event) => {
-              props.changeErrorText('');
+              props.setErrorText('');
               setNewEmail(event.target.value);
               inputChange(event, inputList, formButton, buttonDisabledClass);
             }}
