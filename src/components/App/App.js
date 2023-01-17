@@ -140,48 +140,61 @@ export default React.memo(function App() {
     }
   }
 
+  React.useEffect(() => {
+    togglePreloaderBlock(false);
+  }, [filteredSavedMovies, filteredList])
+
   function getBeatFilms(searchWord, isShortMovie) {
-    getMovieList()
-      .then((res) => {
-        const list = filterMovies(searchWord, res, isShortMovie);
-        setFilteredList(list);
+    if (localStorage.getItem('allBeatMovies')) {
+      setFilteredList(filterMovies(searchWord, JSON.parse(localStorage.getItem('allBeatMovies')), isShortMovie));
+    } else {
+      getMovieList()
+        .then((res) => {
+          const list = filterMovies(searchWord, res, isShortMovie);
+          setFilteredList(list);
 
-        if (currentCardsNumber >= list.length) {
+          if (currentCardsNumber >= list.length) {
+            toggleAddCardButton(false);
+          }
+
+          localStorage.setItem('allBeatMovies', JSON.stringify(res))
+          localStorage.setItem('movies', JSON.stringify(list));
+          localStorage.setItem('isShortMovie', isShortMovie);
+          localStorage.setItem('searchWord', searchWord);
+        })
+        .catch((err) => {
+          toggleMoviesBlock(false);
           toggleAddCardButton(false);
-        }
-
-        localStorage.setItem('movies', JSON.stringify(list));
-        localStorage.setItem('isShortMovie', isShortMovie);
-        localStorage.setItem('searchWord', searchWord);
-      })
-      .catch((err) => {
-        toggleMoviesBlock(false);
-        toggleAddCardButton(false);
-        toggleErrorBlock(true);
-        changeErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
-      })
-      .finally(() => {
-        togglePreloaderBlock(false);
-      })
+          toggleErrorBlock(true);
+          changeErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
+        })
+        .finally(() => {
+          togglePreloaderBlock(false);
+        })
+    }
   };
 
   function getSavedFilms(searchWord, isShortMovie) {
-    getSavedMovieList()
-      .then((res) => {
-        if (res.movies.length < 1) {
-          throw new Error();
-        }
-        const list = filterMovies(searchWord, res.movies, isShortMovie);
-        setFilteredSavedMovies(list);
-      })
-      .catch((err) => {
-        toggleMoviesBlock(false);
-        toggleErrorBlock(true);
-        changeErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
-      })
-      .finally(() => {
-        togglePreloaderBlock(false);
-      })
+    if (savedMovies.length >= 1) {
+      setFilteredSavedMovies(filterMovies(searchWord, savedMovies, isShortMovie))
+    } else {
+      getSavedMovieList()
+        .then((res) => {
+          if (res.movies.length < 1) {
+            throw new Error();
+          }
+          const list = filterMovies(searchWord, res.movies, isShortMovie);
+          setFilteredSavedMovies(list);
+        })
+        .catch((err) => {
+          toggleMoviesBlock(false);
+          toggleErrorBlock(true);
+          changeErrorText('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
+        })
+        .finally(() => {
+          togglePreloaderBlock(false);
+        })
+    }
   }
 
   function handleCardDelete(card) {
