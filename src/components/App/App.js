@@ -330,7 +330,7 @@ export default React.memo(function App() {
 
   React.useEffect(() => {
     setPreloaderBlock(false);
-  }, [filteredSavedMovies, filteredList])
+  }, [filteredSavedMovies, filteredList]);
 
   // check window screen width
 
@@ -345,7 +345,7 @@ export default React.memo(function App() {
 
   React.useEffect(() => {
     if (localStorage.getItem('movies')) {
-      setFilteredList(filterMovies(localStorage.getItem('searchWord'), JSON.parse(localStorage.getItem('movies'))))
+      setFilteredList(filterMovies(localStorage.getItem('searchWord'), JSON.parse(localStorage.getItem('movies'))));
     }
   }, [savedMovies]);
 
@@ -354,14 +354,11 @@ export default React.memo(function App() {
   const handleTokenCheck = React.useCallback(() => {
     setErrorBlock(false);
     setErrorText('');
-
     if (localStorage.getItem("loggedIn")) {
       Promise.all([getSavedMovieList(), getUserInfo()])
         .then((res) => {
           const [movies, { name, email, id }] = res;
           setSavedMovies(movies.movies);
-          setFilteredSavedMovies(movies.movies);
-
           setCurrentUser({
             name: name,
             email: email,
@@ -455,6 +452,7 @@ export default React.memo(function App() {
               <SavedMovies
                 moviesBlock={moviesBlock}
                 filteredSavedMovies={filteredSavedMovies}
+                setFilteredSavedMovies={setFilteredSavedMovies}
                 getSavedFilms={getSavedFilms}
                 handleCardDelete={handleCardDelete}
                 setPreloaderBlock={setPreloaderBlock}

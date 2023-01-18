@@ -13,6 +13,10 @@ export default function SavedMovies(props) {
     props.getSavedFilms(searchWord, isShort);
   }
 
+  React.useEffect(() => {
+    props.setFilteredSavedMovies(props.getSavedFilms('', props.savedMovies));
+  }, [])
+
   return (
     <>
       <SearchForm
