@@ -17,6 +17,7 @@ import Preloader from '../Preloader/Preloader';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import { likeCard, deleteLikeCard, register, login, updateUserInfo, logout, getSavedMovieList, getUserInfo } from '../../utils/MainApi';
+import { shortMovieDuration, anyMovieMaxDuration } from '../../utils/consts.js';
 
 export default React.memo(function App() {
   const [loggedIn, setLoggedIn] = React.useState(JSON.parse(localStorage.getItem("loggedIn")));
@@ -66,7 +67,7 @@ export default React.memo(function App() {
 
   function filterMovies(movieName, allMovies, isShortMovie) {
     movieName = movieName.toLowerCase();
-    const movieDuration = isShortMovie ? 40 : 10000;
+    const movieDuration = isShortMovie ? shortMovieDuration : anyMovieMaxDuration;
     const list = [];
 
     if (!allMovies) {
