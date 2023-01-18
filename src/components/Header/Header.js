@@ -13,9 +13,9 @@ export default function Header(props) {
 
   return (
     <header className='header'>
-      <p onClick={redirect}>
+      <div className="link" onClick={redirect}>
         <img src={logo} alt='логотип' className='header__logo' />
-      </p>
+      </div>
       <section className={loginBlock}>
         <a className='header__login link' href='/signup'>Регистрация</a>
         <a className='link' href='/signin'>

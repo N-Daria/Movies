@@ -16,9 +16,9 @@ export default function Authorization(props) {
 
   return (
     <main className='authorization'>
-      <p onClick={redirect}>
+      <div onClick={redirect} className='link'>
         <img src={logo} alt='логотип' className="authorization__logo" />
-      </p>
+      </div>
       <h2 className='authorization__header'>{props.header}</h2>
       <form name={props.formName} onSubmit={handleSubmit} id={props.formName}>
 
