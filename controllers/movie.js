@@ -6,7 +6,7 @@ const { createdSuccesCode } = require('../errors/responseStatuses');
 const { incorrectDataMessage, undefinedMessage, permissionDeniedMessage } = require('../errors/responseMessages');
 
 module.exports.getMovies = (req, res, next) => {
-  Movie.find({})
+  Movie.find({ owner: req.user._id })
     .then((movies) => res.send({ movies }))
     .catch(next);
 };
