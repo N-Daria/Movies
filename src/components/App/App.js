@@ -297,7 +297,7 @@ export default React.memo(function App() {
           name: '',
           id: ''
         })
-        redirect('/');
+        window.location.reload();
       })
       .catch((err) => {
         setErrorBlock(true);
