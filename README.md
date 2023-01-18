@@ -1,5 +1,5 @@
-# movies-explorer-frontend
+https://github.com/N-Daria/movies-explorer-frontend/pull/2 - ссылка на pull request 
 
-https://disk.yandex.ru/d/RCu_TGSGvyL0eQ - ссылка на макет
+http://movies.daria.nomoredomains.icu - ссылка на сайт 
 
 https://github.com/N-Daria/movies-explorer-frontend/pull/2 - pull request

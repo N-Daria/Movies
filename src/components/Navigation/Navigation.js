@@ -1,12 +1,21 @@
 import './Navigation.css';
-import { useState } from "react";
+import React from "react";
 
 export default function Navigation(props) {
-  let navigationClass = props.loggedIn ? "navigation" : "navigation_none";
-  let navigationButtonClass = props.loggedIn ? "navigation-button" : "navigation_none";
+  const navigationClass = props.loggedIn ? "navigation" : "navigation_none";
+  const navigationButtonClass = props.loggedIn ? "navigation-button" : "navigation_none";
+  const [navButton, setnavButton] = React.useState("navigation-button_open");
+  const [navHide, setnavHide] = React.useState("navigation_hide");
 
-  const [navButton, setnavButton] = useState("navigation-button_open");
-  const [navHide, setnavHide] = useState("navigation_hide");
+  // highlights current page 
+
+  React.useEffect(() => {
+    const currentUrlLink = document.querySelector(`a[href="${window.location.pathname}"]`);
+    if (currentUrlLink.closest('.navigation__link')) {
+      currentUrlLink.closest('.navigation__link').classList.add('navigation__link_active');
+      currentUrlLink.classList.add('navigation__link-text_active');
+    }
+  }, [])
 
   function hideNav() {
     navButton === "navigation-button_open"
