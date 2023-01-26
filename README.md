@@ -52,12 +52,12 @@
 
 ## Инструкцию по развертыванию проекта
 
-git clone https://github.com/N-Daria/Movies.git
-cd backend
-npm i
-npm run start 
-cd ../ frontend
-npm i
+git clone https://github.com/N-Daria/Movies.git  
+cd backend  
+npm i  
+npm run start  
+cd ../ frontend  
+npm i  
 npm run start 
 
 ## Планы по доработке проекта
